@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>204 Team - Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* Background pure ak7el kima t7eb */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* 1. Page de Login / Welcome */
+        .login-screen {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* El Logo mta3ek */
+        .site-logo {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.6));
+            animation: logoGlow 2.5s infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.4)); transform: scale(1); }
+            100% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.8)); transform: scale(1.03); }
+        }
+
+        /* El kteba bil a7mer el ghamre9 w el dounia lkol red theme */
+        .brand-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+        }
+
+        .login-desc {
+            color: #aa1111;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        /* Bouton Discord styled bil red neon vibe */
+        .btn-discord {
+            background-color: #5865F2;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-discord:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+            background-color: #4752c4;
+        }
+
+        /* 2. Main Hub Screen (Red & Black Style) */
+        .main-hub {
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px 20px;
+        }
+
+        .hub-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .grid-downloads {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        /* Cards Style: Dark Black background m3a red borders */
+        .download-card {
+            background: #080808;
+            border: 1px solid rgba(255, 0, 0, 0.15);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 320px;
+        }
+
+        .download-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff0000;
+            background: #0f0202;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.25);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card-desc {
+            color: #888888;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            background: #110000;
+            border: 1px solid #ff0000;
+            transition: all 0.2s ease;
+        }
+
+        .btn-download:hover {
+            background: #ff0000;
+            color: #000000;
+            font-weight: 700;
+            box-shadow: 0 0 15px #ff0000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-screen" id="loginScreen">
+        <img src="logo.png" alt="204 Team Logo" class="site-logo">
+        
+        <h1 class="brand-title">204 TEAM</h1>
+        <p class="login-desc">Authorize your Discord account to access the tools portal.</p>
+        
+        <a href="YOUR_DISCORD_AUTH_URL_HERE" class="btn-discord">
+            <i class="fab fa-discord"></i> Authorize with Discord
+        </a>
+    </div>
+
+    <div class="main-hub" id="mainHub">
+        <div class="hub-header">
+            <img src="logo.png" alt="204 Team Logo" class="site-logo" style="width: 100px; height: 100px; margin-bottom: 15px;">
+            <h1 class="brand-title" style="font-size: 2.5rem;">204 TEAM HUB</h1>
+            <p class="login-desc" style="color: #666; margin-top: 5px;">Click any button to download instantly.</p>
+        </div>
+
+        <div class="grid-downloads">
+            <div class="download-card">
+                <div>
+                    <div class="card-icon"><i class="fab fa-spotify"></i></div>
+                    <h2 class="card-title">Spotify Premium</h2>
+                    <p class="card-desc">Modded desktop/mobile version with adblock and unlimited skips.</p>
+                </div>
+                <a href="https://example.com/spotify-premium.zip" class="btn-download"><i class="fas fa-download"></i> Download</a>
+            </div>
+
+            <div class="download-card">
+                <div>
+                    <div class="card-icon"><i class="fas fa-keyboard"></i></div>
+                    <h2 class="card-title">Macro Script</h2>
+                    <p class="card-desc">Ultra fast key-remapper and clicker script optimized for PvP delay reduction.</p>
+                </div>
+                <a href="https://example.com/macro-setup.exe" class="btn-download"><i class="fas fa-download"></i> Download</a>
+            </div>
+
+            <div class="download-card">
+                <div>
+                    <div class="card-icon"><i class="fas fa-wind"></i></div>
+                    <h2 class="card-title">Strafe Pack</h2>
+                    <p class="card-desc">Custom movement physics adjustments for cleaner strafes and turns.</p>
+                </div>
+                <a href="https://example.com/strafe-pack.zip" class="btn-download"><i class="fas fa-download"></i> Download</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasAccess = urlParams.has('code'); 
+
+            if (hasAccess) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainHub').style.display = 'flex';
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+    </script>
+</body>
+</html>
