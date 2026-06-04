@@ -203,7 +203,7 @@
         }
 
         .hub-page.active-page {
-            display: block;
+            display: block !important;
         }
 
         .grid-downloads {
@@ -273,11 +273,11 @@
             border-radius: 50%;
         }
 
-        .status-undetected { color: #ff0000; text-shadow: 0 0 10px rgba(255, 0, 0, 0.4); }
-        .status-undetected .status-dot { background-color: #ff0000; box-shadow: 0 0 10px #ff0000; animation: blink-red 1.5s infinite; }
+        .status-undetected { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4); }
+        .status-undetected .status-dot { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; animation: blink-green 1.5s infinite; }
         
-        .status-detected { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4); }
-        .status-detected .status-dot { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; animation: blink-green 1.5s infinite; }
+        .status-detected { color: #ff0000; text-shadow: 0 0 10px rgba(255, 0, 0, 0.4); }
+        .status-detected .status-dot { background-color: #ff0000; box-shadow: 0 0 10px #ff0000; animation: blink-red 1.5s infinite; }
 
         @keyframes blink-red { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
         @keyframes blink-green { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
@@ -357,15 +357,15 @@
         /* ERROR MESSAGE FIELD */
         .error-msg {
             color: #ff3333;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-top: 2px;
+            margin-top: 4px;
             display: none;
         }
 
         .input-error {
             border-color: #ff3333 !important;
-            box-shadow: 0 0 8px rgba(255, 51, 51, 0.3) !important;
+            box-shadow: 0 0 8px rgba(255, 51, 51, 0.5) !important;
         }
 
         /* --- RESULTS SCREEN --- */
@@ -464,7 +464,7 @@
         <!-- TOP NAVIGATION CATEGORIES -->
         <div class="hub-navbar" id="hubNavbar">
             <button class="nav-btn active" id="btnPageDownloads" onclick="switchPage('downloads')"><i class="fas fa-download"></i> Portal Downloads</button>
-            <button class="nav-btn" id="btnPageApp" onclick="switchPage('application')"><i class="fas fa-edit"></i> Team Application</button>
+            <button class="nav-btn" id="btnPageApplication" onclick="switchPage('application')"><i class="fas fa-edit"></i> Team Application</button>
             <button class="nav-btn" id="btnPageResult" onclick="switchPage('result')"><i class="fas fa-id-card"></i> Application Result</button>
         </div>
 
@@ -540,14 +540,11 @@
             </div>
         </div>
 
-        <!-- CATEGORY 3: APPLICATION RESULT (DYNAMIC ACCORDING TO LOCALSTORAGE STATUS) -->
+        <!-- CATEGORY 3: APPLICATION RESULT -->
         <div id="pageResult" class="hub-page">
             <div class="result-box">
                 <div id="resultContent">
-                    <!-- Standard status display if no application submitted yet -->
-                    <i class="fas fa-question-circle" style="font-size: 3.5rem; color: #555;"></i>
-                    <h2 class="result-status" style="color: #888;">No Active Application</h2>
-                    <p style="color: #aaa;">You haven't submitted any recruitment form yet or your logs were cleared.</p>
+                    <!-- Loaded dynamically via JavaScript -->
                 </div>
             </div>
         </div>
@@ -575,16 +572,37 @@
         }
         setInterval(drawSnowEffect, 25);
 
-        // --- NAVIGATION TABS CONTROLLER ---
+        // --- FIXED NAVIGATION TABS CONTROLLER ---
         function switchPage(pageName) {
-            const tabs = ['Downloads', 'Application', 'Result'];
-            tabs.forEach(t => {
-                document.getElementById(`page${t}`).classList.remove('active-page');
-                document.getElementById(`btnPage${t}`).classList.remove('active');
+            // Select all layout fields safely
+            const pages = {
+                downloads: document.getElementById('pageDownloads'),
+                application: document.getElementById('pageApplication'),
+                result: document.getElementById('pageResult')
+            };
+
+            const buttons = {
+                downloads: document.getElementById('btnPageDownloads'),
+                application: document.getElementById('btnPageApplication'),
+                result: document.getElementById('btnPageResult')
+            };
+
+            // Hide everything first to reset tracking states
+            Object.keys(pages).forEach(key => {
+                if(pages[key]) pages[key].classList.remove('active-page');
+                if(pages[key]) pages[key].style.display = 'none';
+                if(buttons[key]) buttons[key].classList.remove('active');
             });
             
-            document.getElementById(`page${pageName.charAt(0).toUpperCase() + pageName.slice(1)}`).classList.add('active-page');
-            document.getElementById(`btnPage${pageName.charAt(0).toUpperCase() + pageName.slice(1)}`).classList.add('active');
+            // Show target page context active parameters
+            const targetPage = pages[pageName.toLowerCase()];
+            const targetBtn = buttons[pageName.toLowerCase()];
+
+            if (targetPage && targetBtn) {
+                targetPage.classList.add('active-page');
+                targetPage.style.display = 'block';
+                targetBtn.classList.add('active');
+            }
 
             const mainTitle = document.getElementById('hubMainTitle');
             const mainDesc = document.getElementById('hubMainDesc');
@@ -595,7 +613,7 @@
                 mainTitle.innerText = "TEAM REGISTRATION"; mainDesc.innerText = "Fill out the fields carefully to apply.";
             } else if (pageName === 'result') {
                 mainTitle.innerText = "YOUR STATUS COMPLIANCE"; mainDesc.innerText = "Check updates on your recruitment request entry.";
-                loadApplicationResult(); // Refresh view state
+                loadApplicationResult(); 
             }
         }
 
@@ -603,8 +621,15 @@
         function loadApplicationResult() {
             const status = localStorage.getItem('204_app_status') || 'none';
             const resContent = document.getElementById('resultContent');
+            if(!resContent) return;
 
-            if (status === 'pending') {
+            if (status === 'none') {
+                resContent.innerHTML = `
+                    <i class="fas fa-question-circle" style="font-size: 3.5rem; color: #555;"></i>
+                    <h2 class="result-status" style="color: #888;">No Active Application</h2>
+                    <p style="color: #aaa;">You haven't submitted any recruitment form yet or your logs were cleared.</p>
+                `;
+            } else if (status === 'pending') {
                 resContent.innerHTML = `
                     <i class="fas fa-clock" style="font-size: 4rem; color: #ffaa00;"></i>
                     <h2 class="result-status status-pending-ui">Status: Pending Verification</h2>
@@ -629,7 +654,10 @@
         window.onload = function() {
             setTimeout(() => {
                 const preloader = document.getElementById('preloader');
-                preloader.style.opacity = '0'; preloader.style.visibility = 'hidden';
+                if(preloader) {
+                    preloader.style.opacity = '0'; 
+                    preloader.style.visibility = 'hidden';
+                }
             }, 1000);
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -652,7 +680,6 @@
         document.getElementById('teamAppForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Clear previous errors completely
             let hasErrors = false;
             const inputDiscord = document.getElementById('appDiscord');
             const inputAge = document.getElementById('appAge');
@@ -670,22 +697,21 @@
                 hasErrors = true;
             }
 
-            // 2. DISCORD ID SYNTAC CHECK (No Spaces or @ symbols allowed)
+            // 2. DISCORD ID SYNTAX CHECK
             const discordVal = inputDiscord.value.trim();
-            const discordRegex = /^[a-zA-Z0-9._]{2,32}$/; // Standard discord string logic matching specs
+            const discordRegex = /^[a-zA-Z0-9._]{2,32}$/; 
             if (!discordRegex.test(discordVal) || discordVal.includes('@')) {
                 inputDiscord.classList.add('input-error');
                 errDiscord.style.display = 'block';
                 hasErrors = true;
             }
 
-            if (hasErrors) return; // Halt pipeline transmission instantly
+            if (hasErrors) return; 
 
             // ⚠️ INPUT YOUR PRIMARY LINK WEBHOOK HERE ⚠️
             const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
 
             if (DISCORD_WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
-                // Testing preview failover triggers
                 localStorage.setItem('204_app_status', 'pending');
                 document.getElementById('successOverlay').style.display = 'flex';
                 return;
@@ -699,13 +725,12 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing protocols...';
 
-            // Discord dynamic structural payload format compilation
             const payload = {
                 username: "204 Team Portal Core",
                 avatar_url: "https://trippy-204.github.io/204-Team/logo.png",
                 embeds: [{
                     title: "📥 NEW REGISTER INBOUND REPORT",
-                    color: 16753920, // Orange standard system triage
+                    color: 16753920, 
                     description: "Review metadata credentials parameters below. Action buttons route decision parameters downstream directly to management channels.",
                     fields: [
                         { name: "👤 Candidate Ingame Tag", value: name, inline: true },
@@ -717,8 +742,6 @@
                     footer: { text: "Management Review Required Protocol" },
                     timestamp: new Date()
                 }],
-                // Note: Standard webhooks don't support full interactive discord components directly without bot middleware, 
-                // but we push structured indicator formatting text strings so staff can manually dispatch results securely!
                 content: `⚡ **Verification Required:** Reply with \`!approve ${discordVal}\` or \`!deny ${discordVal}\` in logs channel to sync dashboard results status.`
             };
 
@@ -729,7 +752,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    localStorage.setItem('204_app_status', 'pending'); // Set state locally to tracking view
+                    localStorage.setItem('204_app_status', 'pending'); 
                     document.getElementById('successOverlay').style.display = 'flex';
                     document.getElementById('teamAppForm').reset();
                 } else {
