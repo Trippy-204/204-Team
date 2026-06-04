@@ -200,10 +200,12 @@
     </div>
 
     <script>
-        // ⚠️ SUPABASE CONFIGURATION LINK ⚠️ (BADALHADHOM B-DATA MTE3EK)
-const SUPABASE_URL = 'https://yijvbiqvmdhvqnefjpnn.supabase.co'; 
-const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
+<script>
+        // ⚠️ SUPABASE CONFIGURATION LINK ⚠️
+        const SUPABASE_URL = 'https://yijvbiqvmdhvqnefjpnn.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY'; // Copied clean from image_e15589.png screen 
         
+        // Declared ONCE safely hna
         const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
         // --- BACKGROUND EFFECT ---
@@ -252,12 +254,11 @@ const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
                 return;
             }
 
-            if (!supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
-                resContent.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 3.5rem; color: #ff3333;"></i><h2 class="result-status" style="color: #ff3333;">Config Error</h2><p style="color: #aaa;">Database connection keys missing or invalid.</p>`;
+            if (!supabase) {
+                resContent.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 3.5rem; color: #ff3333;"></i><h2 class="result-status" style="color: #ff3333;">Config Error</h2><p style="color: #aaa;">Database connection core offline.</p>`;
                 return;
             }
 
-            // Fetch live data directly from the table matching discord_id
             const { data, error } = await supabase.from('applications').select('status').eq('discord_id', savedDiscord).maybeSingle();
 
             if (error || !data) {
@@ -275,9 +276,13 @@ const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
             }
         }
 
-        // --- INITIAL WINDOW LOADER ---
+        // --- INITIAL WINDOW LOADER WITH FORCE OVERRIDE ---
         window.onload = function() {
-            setTimeout(() => { const preloader = document.getElementById('preloader'); if(preloader) { preloader.style.opacity = '0'; preloader.style.visibility = 'hidden'; } }, 1000);
+            setTimeout(() => { 
+                const preloader = document.getElementById('preloader'); 
+                if(preloader) { preloader.style.opacity = '0'; preloader.style.visibility = 'hidden'; } 
+            }, 1500);
+
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('code') || localStorage.getItem('204_authorized') === 'true') {
                 localStorage.setItem('204_authorized', 'true');
@@ -318,8 +323,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
             const skills = document.getElementById('appRole').value;
             const experience = document.getElementById('appExperience').value;
 
-            // 1. INJECT TO DATABASE FIRST
-            if (supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+            if (supabase) {
                 const { error: dbError } = await supabase.from('applications').upsert([
                     { name: name, discord_id: discordVal, age: ageVal, skills: skills, experience: experience, status: 'pending' }
                 ], { onConflict: 'discord_id' });
@@ -334,7 +338,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
 
             localStorage.setItem('204_user_discord', discordVal);
 
-            // 2. DISPATCH DISCORD NOTIFICATION (BADAL EL-WEBHOOK METE3EK HNA)
+            // Webhook direct integration 
             const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
             if (DISCORD_WEBHOOK_URL !== 'YOUR_WEBHOOK_URL_HERE') {
                 const payload = {
@@ -354,7 +358,6 @@ const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
                         timestamp: new Date()
                     }]
                 };
-
                 await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(err => console.log(err));
             }
 
@@ -364,5 +367,3 @@ const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
             document.getElementById('teamAppForm').reset();
         });
     </script>
-</body>
-</html>
