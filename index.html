@@ -200,12 +200,11 @@
     </div>
 
     <script>
-<script>
-        // ⚠️ SUPABASE CONFIGURATION LINK ⚠️
+        // ⚠️ FIXED CORE CREDENTIALS ⚠️
         const SUPABASE_URL = 'https://yijvbiqvmdhvqnefjpnn.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY'; // Copied clean from image_e15589.png screen 
+        const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY'; 
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
         
-        // Declared ONCE safely hna
         const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
         // --- BACKGROUND EFFECT ---
@@ -224,7 +223,7 @@
         }
         setInterval(drawSnowEffect, 25);
 
-        // --- PAGE SWITCHER (FIXED NAVIGATION) ---
+        // --- PAGE SWITCHER ---
         function switchPage(pageName) {
             const pages = { downloads: document.getElementById('pageDownloads'), application: document.getElementById('pageApplication'), result: document.getElementById('pageResult') };
             const buttons = { downloads: document.getElementById('btnPageDownloads'), application: document.getElementById('btnPageApplication'), result: document.getElementById('btnPageResult') };
@@ -276,7 +275,7 @@
             }
         }
 
-        // --- INITIAL WINDOW LOADER WITH FORCE OVERRIDE ---
+        // --- INITIAL WINDOW LOADER ---
         window.onload = function() {
             setTimeout(() => { 
                 const preloader = document.getElementById('preloader'); 
@@ -338,28 +337,30 @@
 
             localStorage.setItem('204_user_discord', discordVal);
 
-            // Webhook direct integration 
-            const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
-            if (DISCORD_WEBHOOK_URL !== 'YOUR_WEBHOOK_URL_HERE') {
-                const payload = {
-                    username: "204 Team Portal Core",
-                    avatar_url: "https://trippy-204.github.io/204-Team/logo.png",
-                    embeds: [{
-                        title: "📥 NEW REGISTER INBOUND REPORT",
-                        color: 16753920,
-                        description: `Review parameters below. Go to your Supabase Dashboard Table to change the status column value for **${discordVal}** to \`accepted\` or \`rejected\`.`,
-                        fields: [
-                            { name: "👤 Candidate Tag", value: name, inline: true },
-                            { name: "🎮 Discord ID", value: `\`${discordVal}\``, inline: true },
-                            { name: "⏳ Declared Age", value: String(ageVal), inline: true },
-                            { name: "⚡ System Skills", value: skills, inline: false },
-                            { name: "📝 Experience Log", value: experience, inline: false }
-                        ],
-                        timestamp: new Date()
-                    }]
-                };
-                await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(err => console.log(err));
-            }
+            // Discord Webhook Delivery
+            const payload = {
+                username: "204 Team Portal Core",
+                avatar_url: "https://trippy-204.github.io/204-Team/logo.png",
+                embeds: [{
+                    title: "📥 NEW REGISTER INBOUND REPORT",
+                    color: 16753920,
+                    description: `Review parameters below. Go to your Supabase Dashboard Table to change the status column value for **${discordVal}** to \`accepted\` or \`rejected\`.`,
+                    fields: [
+                        { name: "👤 Candidate Tag", value: name, inline: true },
+                        { name: "🎮 Discord ID", value: `\`${discordVal}\``, inline: true },
+                        { name: "⏳ Declared Age", value: String(ageVal), inline: true },
+                        { name: "⚡ System Skills", value: skills, inline: false },
+                        { name: "📝 Experience Log", value: experience, inline: false }
+                    ],
+                    timestamp: new Date()
+                }]
+            };
+            
+            await fetch(DISCORD_WEBHOOK_URL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(payload) 
+            }).catch(err => console.log(err));
 
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
@@ -367,3 +368,5 @@
             document.getElementById('teamAppForm').reset();
         });
     </script>
+</body>
+</html>
