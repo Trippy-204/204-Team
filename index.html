@@ -24,6 +24,17 @@
             position: relative;
         }
 
+        /* --- BACKGROUND EFFECT (CANVAS) --- */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         /* --- PRELOADER SCREEN --- */
         #preloader {
             position: fixed;
@@ -87,6 +98,7 @@
             align-items: center;
             gap: 20px;
             padding: 20px;
+            z-index: 10;
         }
 
         .site-logo {
@@ -102,7 +114,7 @@
             100% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.8)); transform: scale(1.03); }
         }
 
-        /* CYBERPUNK GLITCH EFFECT ON HOVER */
+        /* NDHIFA MEN GHIR CYBERPUNK GLITCH */
         .brand-title {
             font-size: 3.5rem;
             font-weight: 900;
@@ -111,18 +123,6 @@
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
             position: relative;
             cursor: default;
-        }
-
-        .brand-title:hover {
-            animation: glitch 0.3s linear infinite;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); text-shadow: 2px -2px #ff0000, -2px 2px #00ffff; }
-            25% { transform: translate(-2px, 2px); text-shadow: -2px 2px #ff0000, 2px -2px #00ffff; }
-            50% { transform: translate(2px, -2px); text-shadow: 2px 2px #ff0000, -2px -2px #00ffff; }
-            75% { transform: translate(-1px, -1px); text-shadow: -2px -2px #ff0000, 2px 2px #00ffff; }
-            100% { transform: translate(0); }
         }
 
         .login-desc {
@@ -161,13 +161,26 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             padding: 40px 20px;
+            z-index: 10;
         }
 
         .hub-header {
             text-align: center;
             margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin: 40px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #ff0000;
+            padding-bottom: 8px;
+            width: 100%;
+            text-align: left;
         }
 
         .grid-downloads {
@@ -179,7 +192,7 @@
 
         /* CARDS WITH NEON GLOW EFFECTS */
         .download-card {
-            background: #080808;
+            background: rgba(8, 8, 8, 0.9);
             border: 1px solid rgba(255, 0, 0, 0.15);
             border-radius: 16px;
             padding: 30px;
@@ -190,13 +203,13 @@
             justify-content: space-between;
             align-items: center;
             height: 340px;
-            position: relative;
+            backdrop-filter: blur(5px);
         }
 
         .download-card:hover {
             transform: translateY(-8px);
             border-color: #ff0000;
-            background: #0f0202;
+            background: rgba(15, 2, 2, 0.95);
             box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
         }
 
@@ -219,7 +232,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- STATUS CLASSES (RED FOR UNDETECTED, GREEN FOR DETECTED) --- */
+        /* --- STATUS CLASSES --- */
         .status-container {
             display: flex;
             align-items: center;
@@ -238,7 +251,6 @@
             border-radius: 50%;
         }
 
-        /* Red Status (Undetected) */
         .status-undetected {
             color: #ff0000;
             text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
@@ -254,7 +266,6 @@
             100% { opacity: 0.3; box-shadow: 0 0 2px #ff0000; }
         }
 
-        /* Green Status (Detected) */
         .status-detected {
             color: #00ff00;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
@@ -270,7 +281,7 @@
             100% { opacity: 0.3; box-shadow: 0 0 2px #00ff00; }
         }
 
-        .btn-download {
+        .btn-download, .btn-submit {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
@@ -280,17 +291,85 @@
             background: #110000;
             border: 1px solid #ff0000;
             transition: all 0.2s ease;
+            cursor: pointer;
+            text-align: center;
         }
 
-        .btn-download:hover {
+        .btn-download:hover, .btn-submit:hover {
             background: #ff0000;
             color: #000000;
             font-weight: 700;
             box-shadow: 0 0 15px #ff0000;
         }
+
+        /* --- APPLICATION FORM CATEGORY --- */
+        .app-section {
+            width: 100%;
+            background: rgba(8, 8, 8, 0.9);
+            border: 1px solid rgba(255, 0, 0, 0.15);
+            border-radius: 16px;
+            padding: 35px;
+            margin-top: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .app-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .app-form { grid-template-columns: 1fr; }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .form-group.full-width { grid-column: span 1; }
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: #b3b3b3;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            background: #141414;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
     </style>
 </head>
 <body>
+
+    <!-- BACKGROUND EFFECT CANVAS -->
+    <canvas id="bgCanvas"></canvas>
 
     <!-- PRELOADER -->
     <div id="preloader">
@@ -310,10 +389,8 @@
     <!-- SECTION 1: LOGIN SCREEN -->
     <div class="login-screen" id="loginScreen">
         <img src="logo.png" alt="204 Team Logo" class="site-logo">
-        
         <h1 class="brand-title">204 TEAM</h1>
         <p class="login-desc">Authorize your Discord account to access the tools portal.</p>
-        
         <a href="https://discord.com/oauth2/authorize?client_id=1512167123764379749&response_type=code&redirect_uri=https%3A%2F%2Ftrippy-204.github.io%2F204-Team%2F&scope=identify" class="btn-discord">
             <i class="fab fa-discord"></i> Authorize with Discord
         </a>
@@ -324,9 +401,11 @@
         <div class="hub-header">
             <img src="logo.png" alt="204 Team Logo" class="site-logo" style="width: 100px; height: 100px; margin-bottom: 15px;">
             <h1 class="brand-title" style="font-size: 2.5rem;">204 TEAM HUB</h1>
-            <p class="login-desc" style="color: #666; margin-top: 5px;">Click any button to download instantly.</p>
+            <p class="login-desc" style="color: #666; margin-top: 5px;">Access your team files and portal applications below.</p>
         </div>
 
+        <!-- CATEGORY 1: DOWNLOADS -->
+        <h2 class="section-title"><i class="fas fa-download"></i> Available Downloads</h2>
         <div class="grid-downloads">
             <!-- Spotify Premium Card -->
             <div class="download-card">
@@ -336,7 +415,6 @@
                     <p class="card-desc">Spotify Premium Version By Trippy.</p>
                 </div>
                 <div>
-                    <!-- Jomla kamla bil-akhdhar (Detected) -->
                     <div class="status-container status-detected">
                         <span class="status-dot"></span>
                         <span>Status: Detected</span>
@@ -353,7 +431,6 @@
                     <p class="card-desc">Ultra fast key-remapper and clicker optimized for lag reduction.</p>
                 </div>
                 <div>
-
                     <div class="status-container status-undetected">
                         <span class="status-dot"></span>
                         <span>Status: Undetected</span>
@@ -370,20 +447,94 @@
                     <p class="card-desc">Custom physics adjustments for cleaner movement and turns.</p>
                 </div>
                 <div>
-                    <!-- Jomla kamla bil-a7mer (Undetected) -->
-                    <div class="status-container status-detected">
+                    <div class="status-container status-undetected">
                         <span class="status-dot"></span>
-                        <span>Status: Detected</span>
+                        <span>Status: Undetected</span>
                     </div>
-                    <a href="https://cdn.discordapp.com/attachments/1423586049539575879/1423593368314843186/SPOILER_Fuzzy_Strafe_2_1.zip?ex=6a2336e4&is=6a21e564&hm=874423ff3f97aa045812674e095de7db781418e7394a36bcde90f9953f03fc17&" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                    <a href="#" class="btn-download"><i class="fas fa-download"></i> Download</a>
                 </div>
             </div>
+        </div>
+
+        <!-- CATEGORY 2: APPLICATION TEAM -->
+        <h2 class="section-title"><i class="fas fa-users"></i> Application Team</h2>
+        <div class="app-section">
+            <form class="app-form" id="teamAppForm">
+                <div class="form-group">
+                    <label for="appName">Your Name / In-game Name</label>
+                    <input type="text" id="appName" placeholder="e.g. Trippy" required>
+                </div>
+                <div class="form-group">
+                    <label for="appDiscord">Discord Tag / ID</label>
+                    <input type="text" id="appDiscord" placeholder="e.g. trippy204" required>
+                </div>
+                <div class="form-group">
+                    <label for="appAge">Your Age</label>
+                    <input type="number" id="appAge" placeholder="e.g. 19" min="1" max="99" required>
+                </div>
+                <div class="form-group">
+                    <label for="appRole">Primary Role / Specialty</label>
+                    <select id="appRole" required>
+                        <option value="" disabled selected>Select your skill</option>
+                        <option value="Developer / Scripter">Developer / Scripter</option>
+                        <option value="UI/UX Designer">UI/UX Designer</option>
+                        <option value="Media Creator / Video Editor">Media Creator / Video Editor</option>
+                        <option value="Moderator / Support">Moderator / Support</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label for="appExperience">Why do you want to join 204 TEAM & What is your experience?</label>
+                    <textarea id="appExperience" placeholder="Tell us about your previous works and motivations..." required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit Application</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
+        // --- BACKGROUND MATRIX LINES EFFECT ---
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const columns = Math.floor(canvas.width / 20);
+        const yPositions = Array(columns).fill(0);
+
+        function drawBackgroundEffect() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Red digital lines stream effect
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.15)'; 
+            ctx.font = '15px monospace';
+
+            for (let i = 0; i < yPositions.length; i++) {
+                const text = String.fromCharCode(Math.floor(Math.random() * 93) + 33);
+                const x = i * 20;
+                const y = yPositions[i];
+
+                ctx.fillText(text, x, y);
+
+                if (y > canvas.height && Math.random() > 0.975) {
+                    yPositions[i] = 0;
+                } else {
+                    yPositions[i] += 20;
+                }
+            }
+        }
+        setInterval(drawBackgroundEffect, 30);
+
+
+        // --- PRELOADER & OAUTH LOGIC ---
         window.onload = function() {
-            // Sakket el Preloader automatic ba3d 1 sanya mel-khidma
             setTimeout(function() {
                 const preloader = document.getElementById('preloader');
                 preloader.style.opacity = '0';
@@ -392,18 +543,80 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             const hasAccessCode = urlParams.has('code'); 
-            
             const alreadyAuthorized = localStorage.getItem('204_authorized');
 
             if (hasAccessCode || alreadyAuthorized === 'true') {
                 localStorage.setItem('204_authorized', 'true');
-                
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainHub').style.display = 'flex';
-                
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         }
+
+
+        // --- DISCORD WEBHOOK APPLICATION FORM SUBMIT ---
+        document.getElementById('teamAppForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // ⚠️ 7OTT EL-LINK MTA3 EL-WEBHOOK MTE3EK HNA ⚠️
+            const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
+
+            if (DISCORD_WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
+                alert('Err: Please configure your Discord Webhook URL inside the code script.');
+                return;
+            }
+
+            const name = document.getElementById('appName').value;
+            const discord = document.getElementById('appDiscord').value;
+            const age = document.getElementById('appAge').value;
+            const role = document.getElementById('appRole').value;
+            const experience = document.getElementById('appExperience').value;
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            // Custom Embed Configuration for Discord Message
+            const payload = {
+                username: "204 Team Portal",
+                avatar_url: "https://trippy-204.github.io/204-Team/logo.png", // automatic pull an image if valid
+                embeds: [{
+                    title: "🔴 NEW TEAM MEMBERSHIP APPLICATION 🔴",
+                    color: 16711680, // Red Color Code
+                    fields: [
+                        { name: "👤 Applicant Name", value: name, inline: true },
+                        { name: "🎮 Discord Identity", value: discord, inline: true },
+                        { name: "⏳ Age", value: age, inline: true },
+                        { name: "⚡ Selected Specialty", value: role, inline: true },
+                        { name: "📝 Experience & Motivation", value: experience, inline: false }
+                    ],
+                    footer: { text: "204 Team Recruitment Hub System" },
+                    timestamp: new Date()
+                }]
+            };
+
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('✅ Your application has been submitted successfully to 204 TEAM!');
+                    document.getElementById('teamAppForm').reset();
+                } else {
+                    alert('❌ Error sending application to Discord. Check webhook permissions.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Connection error. Try again later.');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+            });
+        });
     </script>
 </body>
 </html>
