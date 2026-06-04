@@ -13,7 +13,6 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
-        /* Background pure ak7el kima t7eb */
         body {
             background-color: #000000;
             color: #ffffff;
@@ -25,7 +24,32 @@
             position: relative;
         }
 
-        /* El Blasa l-fouqani 3al imin bél koll lél Discord icon */
+        /* --- PRELOADER SCREEN --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader-content {
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- SOCIAL ICON --- */
         .top-right-social {
             position: absolute;
             top: 20px;
@@ -55,7 +79,7 @@
             box-shadow: 0 0 15px #5865F2;
         }
 
-        /* 1. Page de Login / Welcome */
+        /* --- SECTION 1: LOGIN SCREEN --- */
         .login-screen {
             text-align: center;
             display: flex;
@@ -65,7 +89,6 @@
             padding: 20px;
         }
 
-        /* El Logo mta3ek */
         .site-logo {
             width: 180px;
             height: 180px;
@@ -79,13 +102,27 @@
             100% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.8)); transform: scale(1.03); }
         }
 
-        /* El kteba bil a7mer el ghamre9 w el dounia lkol red theme */
+        /* CYBERPUNK GLITCH EFFECT ON HOVER */
         .brand-title {
             font-size: 3.5rem;
             font-weight: 900;
             letter-spacing: 3px;
             color: #ff0000;
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            position: relative;
+            cursor: default;
+        }
+
+        .brand-title:hover {
+            animation: glitch 0.3s linear infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); text-shadow: 2px -2px #ff0000, -2px 2px #00ffff; }
+            25% { transform: translate(-2px, 2px); text-shadow: -2px 2px #ff0000, 2px -2px #00ffff; }
+            50% { transform: translate(2px, -2px); text-shadow: 2px 2px #ff0000, -2px -2px #00ffff; }
+            75% { transform: translate(-1px, -1px); text-shadow: -2px -2px #ff0000, 2px 2px #00ffff; }
+            100% { transform: translate(0); }
         }
 
         .login-desc {
@@ -95,7 +132,6 @@
             margin-bottom: 10px;
         }
 
-        /* Bouton Discord styled bil red neon vibe */
         .btn-discord {
             background-color: #5865F2;
             color: white;
@@ -119,7 +155,7 @@
             background-color: #4752c4;
         }
 
-        /* 2. Main Hub Screen (Red & Black Style) */
+        /* --- SECTION 2: THE HUB --- */
         .main-hub {
             display: none; 
             flex-direction: column;
@@ -136,12 +172,12 @@
 
         .grid-downloads {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             width: 100%;
         }
 
-        /* Cards Style: Dark Black background m3a red borders */
+        /* CARDS WITH NEON GLOW EFFECTS */
         .download-card {
             background: #080808;
             border: 1px solid rgba(255, 0, 0, 0.15);
@@ -153,14 +189,15 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            height: 320px;
+            height: 340px;
+            position: relative;
         }
 
         .download-card:hover {
             transform: translateY(-8px);
             border-color: #ff0000;
             background: #0f0202;
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.25);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
         }
 
         .card-icon {
@@ -180,6 +217,34 @@
             color: #888888;
             font-size: 0.9rem;
             margin-bottom: 20px;
+        }
+
+        /* LIVE STATUS INDICATOR (BLINKING DOT) */
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: #00ff00;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff00;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; box-shadow: 0 0 2px #00ff00; }
+            50% { opacity: 1; box-shadow: 0 0 12px #00ff00; }
+            100% { opacity: 0.3; box-shadow: 0 0 2px #00ff00; }
         }
 
         .btn-download {
@@ -204,7 +269,15 @@
 </head>
 <body>
 
-    <!-- Discord Icon l-fouq 3al imin dima mawjouda -->
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="logo.png" alt="Loading..." class="site-logo" style="width: 120px; height: 120px;">
+            <h2 style="color: #ff0000; margin-top: 15px; letter-spacing: 2px; font-size: 1.2rem; text-shadow: 0 0 10px #ff0000;">LOADING PORTAL...</h2>
+        </div>
+    </div>
+
+    <!-- Discord Icon l-fouq 3al imin -->
     <div class="top-right-social">
         <a href="https://discord.gg/RJBTwDDZmQ" class="social-icon discord" target="_blank" title="Join Discord">
             <i class="fab fa-discord"></i>
@@ -237,32 +310,71 @@
                 <div>
                     <div class="card-icon"><i class="fab fa-spotify"></i></div>
                     <h2 class="card-title">Spotify Premium</h2>
-                    <p class="card-desc">Spotify Premium Version By Trippy .</p>
+                    <p class="card-desc">Spotify Premium Version By Trippy.</p>
                 </div>
-                <a href="https://cdn.discordapp.com/attachments/1499459694752698438/1512190627193028728/Spotify_Premium.zip?ex=6a2330c4&is=6a21df44&hm=9f2a4a6a78713643e7c3702686760e61912762acf82944b2010836586bf3ca58&" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                <div>
+                    <div class="status-container">
+                        <span class="status-dot"></span>
+                        <span>Status: Operational</span>
+                    </div>
+                    <a href="https://cdn.discordapp.com/attachments/1499459694752698438/1512190627193028728/Spotify_Premium.zip?ex=6a2330c4&is=6a21df44&hm=9f2a4a6a78713643e7c3702686760e61912762acf82944b2010836586bf3ca58&" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                </div>
             </div>
             
-            <!-- Tnajem tzid hna les cards lokhrin kima macro walla strafe kima kounna 3amlin -->
+            <!-- Macro Script Card -->
+            <div class="download-card">
+                <div>
+                    <div class="card-icon"><i class="fas fa-keyboard"></i></div>
+                    <h2 class="card-title">Macro Script</h2>
+                    <p class="card-desc">Ultra fast key-remapper and clicker optimized for lag reduction.</p>
+                </div>
+                <div>
+                    <div class="status-container">
+                        <span class="status-dot"></span>
+                        <span>Status: Undetected</span>
+                    </div>
+                    <a href="#" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                </div>
+            </div>
+
+            <!-- Strafe Pack Card -->
+            <div class="download-card">
+                <div>
+                    <div class="card-icon"><i class="fas fa-wind"></i></div>
+                    <h2 class="card-title">Strafe Pack</h2>
+                    <p class="card-desc">Custom physics adjustments for cleaner movement and turns.</p>
+                </div>
+                <div>
+                    <div class="status-container">
+                        <span class="status-dot"></span>
+                        <span>Status: Undetected</span>
+                    </div>
+                    <a href="#" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         window.onload = function() {
+            // Sakket el Preloader automatic ba3d d9i9tin melli l-page t-7el
+            setTimeout(function() {
+                const preloader = document.getElementById('preloader');
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+            }, 1000);
+
             const urlParams = new URLSearchParams(window.location.search);
             const hasAccessCode = urlParams.has('code'); 
             
-            // Nchoufo ken el user 3ada l-authorize 9bal fil browser hadha
             const alreadyAuthorized = localStorage.getItem('204_authorized');
 
             if (hasAccessCode || alreadyAuthorized === 'true') {
-                // Itha 3andou code tawa walla m3adih 9bal, ntsajloha fil LocalStorage
                 localStorage.setItem('204_authorized', 'true');
                 
-                // Nkhfiw el login w nwariw el Hub direct
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainHub').style.display = 'flex';
                 
-                // Nnaffo l-URL mel code mta3 Discord
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         }
