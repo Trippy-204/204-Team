@@ -22,6 +22,37 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* El Blasa l-fouqani 3al imin bél koll lél Discord icon */
+        .top-right-social {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .social-icon {
+            color: #b3b3b3;
+            font-size: 1.3rem;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .social-icon:hover {
+            color: #ffffff;
+            transform: scale(1.1);
+            background-color: #5865F2;
+            box-shadow: 0 0 15px #5865F2;
         }
 
         /* 1. Page de Login / Welcome */
@@ -169,37 +200,18 @@
             font-weight: 700;
             box-shadow: 0 0 15px #ff0000;
         }
-.social-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .social-icon {
-            color: #b3b3b3;
-            font-size: 1.3rem;
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Alwén dynamic ki t7ot l-Souris 3la les boutons */
-        .social-icon:hover {
-            color: #ffffff;
-            transform: scale(1.1);
-        }
-        .social-icon.discord:hover { background-color: #5865F2; }
     </style>
 </head>
 <body>
 
+    <!-- Discord Icon l-fouq 3al imin dima mawjouda -->
+    <div class="top-right-social">
+        <a href="https://discord.gg/RJBTwDDZmQ" class="social-icon discord" target="_blank" title="Join Discord">
+            <i class="fab fa-discord"></i>
+        </a>
+    </div>
+
+    <!-- SECTION 1: LOGIN SCREEN -->
     <div class="login-screen" id="loginScreen">
         <img src="logo.png" alt="204 Team Logo" class="site-logo">
         
@@ -211,6 +223,7 @@
         </a>
     </div>
 
+    <!-- SECTION 2: THE HUB -->
     <div class="main-hub" id="mainHub">
         <div class="hub-header">
             <img src="logo.png" alt="204 Team Logo" class="site-logo" style="width: 100px; height: 100px; margin-bottom: 15px;">
@@ -219,6 +232,7 @@
         </div>
 
         <div class="grid-downloads">
+            <!-- Spotify Premium Card -->
             <div class="download-card">
                 <div>
                     <div class="card-icon"><i class="fab fa-spotify"></i></div>
@@ -227,22 +241,28 @@
                 </div>
                 <a href="https://cdn.discordapp.com/attachments/1499459694752698438/1512190627193028728/Spotify_Premium.zip?ex=6a2330c4&is=6a21df44&hm=9f2a4a6a78713643e7c3702686760e61912762acf82944b2010836586bf3ca58&" class="btn-download"><i class="fas fa-download"></i> Download</a>
             </div>
-            <div class="social-links">
-            <!-- Discord -->
-            <a href="https://discord.gg/RJBTwDDZmQ" class="social-icon discord" target="_blank" title="Join Discord">
-                <i class="fab fa-discord"></i>
-            </a>
+            
+            <!-- Tnajem tzid hna les cards lokhrin kima macro walla strafe kima kounna 3amlin -->
         </div>
     </div>
 
     <script>
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const hasAccess = urlParams.has('code'); 
+            const hasAccessCode = urlParams.has('code'); 
+            
+            // Nchoufo ken el user 3ada l-authorize 9bal fil browser hadha
+            const alreadyAuthorized = localStorage.getItem('204_authorized');
 
-            if (hasAccess) {
+            if (hasAccessCode || alreadyAuthorized === 'true') {
+                // Itha 3andou code tawa walla m3adih 9bal, ntsajloha fil LocalStorage
+                localStorage.setItem('204_authorized', 'true');
+                
+                // Nkhfiw el login w nwariw el Hub direct
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainHub').style.display = 'flex';
+                
+                // Nnaffo l-URL mel code mta3 Discord
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         }
