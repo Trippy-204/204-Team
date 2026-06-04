@@ -5,419 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>204 Team - Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        #bgCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000000;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: #000000; color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: center; overflow-x: hidden; position: relative; }
+        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .loader-content { text-align: center; animation: fadeIn 1.5s ease-in-out; }
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
         
-        .loader-content {
-            text-align: center;
-            animation: fadeIn 1.5s ease-in-out;
-        }
+        .hub-navbar { display: none; justify-content: center; gap: 15px; margin-bottom: 30px; width: 100%; flex-wrap: wrap; }
+        .nav-btn { background: rgba(255, 0, 0, 0.05); border: 1px solid rgba(255, 0, 0, 0.3); color: #ffffff; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; }
+        .nav-btn:hover, .nav-btn.active { background: #ff0000; color: #000000; border-color: #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+        .top-right-social { position: absolute; top: 20px; right: 20px; z-index: 100; }
+        .social-icon { color: #b3b3b3; font-size: 1.3rem; width: 45px; height: 45px; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .social-icon:hover { color: #ffffff; transform: scale(1.1); background-color: #5865F2; box-shadow: 0 0 15px #5865F2; }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
-        }
+        .login-screen { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; z-index: 10; }
+        .site-logo { width: 180px; height: 180px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.6)); animation: logoGlow 2.5s infinite alternate; }
+        @keyframes logoGlow { 0% { filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.4)); transform: scale(1); } 100% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.8)); transform: scale(1.03); } }
+        .brand-title { font-size: 3.5rem; font-weight: 900; letter-spacing: 3px; color: #ff0000; text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); position: relative; cursor: default; }
+        .login-desc { color: #aa1111; font-size: 1.1rem; font-weight: 500; margin-bottom: 10px; }
+        .btn-discord { background-color: #5865F2; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4); transition: all 0.3s ease; border: none; cursor: pointer; }
+        .btn-discord:hover { transform: translateY(-3px); box-shadow: 0 0 25px rgba(255, 0, 0, 0.8); background-color: #4752c4; }
 
-        /* --- NAVIGATION MENU --- */
-        .hub-navbar {
-            display: none;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            width: 100%;
-            flex-wrap: wrap;
-        }
+        .main-hub { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 1100px; padding: 40px 20px; z-index: 10; }
+        .hub-header { text-align: center; margin-bottom: 30px; }
+        .hub-page { display: none; width: 100%; }
+        .hub-page.active-page { display: block !important; }
+        .grid-downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; }
+        .download-card { background: rgba(8, 8, 8, 0.85); border: 1px solid rgba(255, 0, 0, 0.15); border-radius: 16px; padding: 30px; text-align: center; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 340px; backdrop-filter: blur(8px); }
+        .download-card:hover { transform: translateY(-8px); border-color: #ff0000; background: rgba(15, 2, 2, 0.9); box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); }
+        .card-icon { font-size: 3.5rem; margin-bottom: 15px; color: #ff0000; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+        .card-title { font-size: 1.4rem; margin-bottom: 10px; color: #ffffff; }
+        .card-desc { color: #888888; font-size: 0.9rem; margin-bottom: 20px; }
 
-        .nav-btn {
-            background: rgba(255, 0, 0, 0.05);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background: #ff0000;
-            color: #000000;
-            border-color: #ff0000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-        }
-
-        .top-right-social {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
-        .social-icon {
-            color: #b3b3b3;
-            font-size: 1.3rem;
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .social-icon:hover {
-            color: #ffffff;
-            transform: scale(1.1);
-            background-color: #5865F2;
-            box-shadow: 0 0 15px #5865F2;
-        }
-
-        /* --- SECTION 1: LOGIN --- */
-        .login-screen {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            z-index: 10;
-        }
-
-        .site-logo {
-            width: 180px;
-            height: 180px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.6));
-            animation: logoGlow 2.5s infinite alternate;
-        }
-
-        @keyframes logoGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.4)); transform: scale(1); }
-            100% { filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.8)); transform: scale(1.03); }
-        }
-
-        .brand-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: #ff0000;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
-            position: relative;
-            cursor: default;
-        }
-
-        .login-desc {
-            color: #aa1111;
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .btn-discord {
-            background-color: #5865F2;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-discord:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
-            background-color: #4752c4;
-        }
-
-        /* --- SECTION 2: THE HUB --- */
-        .main-hub {
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 1100px;
-            padding: 40px 20px;
-            z-index: 10;
-        }
-
-        .hub-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .hub-page {
-            display: none;
-            width: 100%;
-        }
-
-        .hub-page.active-page {
-            display: block !important;
-        }
-
-        .grid-downloads {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            width: 100%;
-        }
-
-        .download-card {
-            background: rgba(8, 8, 8, 0.85);
-            border: 1px solid rgba(255, 0, 0, 0.15);
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            height: 340px;
-            backdrop-filter: blur(8px);
-        }
-
-        .download-card:hover {
-            transform: translateY(-8px);
-            border-color: #ff0000;
-            background: rgba(15, 2, 2, 0.9);
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
-        }
-
-        .card-icon {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            color: #ff0000;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-        }
-
-        .card-title {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            color: #ffffff;
-        }
-
-        .card-desc {
-            color: #888888;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-
-        /* --- STATUS COLORS --- */
-        .status-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
+        .status-container { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
         .status-undetected { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4); }
         .status-undetected .status-dot { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; animation: blink-green 1.5s infinite; }
-        
         .status-detected { color: #ff0000; text-shadow: 0 0 10px rgba(255, 0, 0, 0.4); }
         .status-detected .status-dot { background-color: #ff0000; box-shadow: 0 0 10px #ff0000; animation: blink-red 1.5s infinite; }
-
         @keyframes blink-red { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
         @keyframes blink-green { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        .btn-download, .btn-submit, .btn-success-close {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            background: #110000;
-            border: 1px solid #ff0000;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            text-align: center;
-        }
+        .btn-download, .btn-submit, .btn-success-close { width: 100%; padding: 12px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 600; background: #110000; border: 1px solid #ff0000; transition: all 0.2s ease; cursor: pointer; text-align: center; }
+        .btn-download:hover, .btn-submit:hover, .btn-success-close:hover { background: #ff0000; color: #000000; font-weight: 700; box-shadow: 0 0 15px #ff0000; }
 
-        .btn-download:hover, .btn-submit:hover, .btn-success-close:hover {
-            background: #ff0000;
-            color: #000000;
-            font-weight: 700;
-            box-shadow: 0 0 15px #ff0000;
-        }
-
-        /* --- APPLICATION FORM & VALIDATIONS --- */
-        .app-section {
-            width: 100%;
-            background: rgba(8, 8, 8, 0.85);
-            border: 1px solid rgba(255, 0, 0, 0.15);
-            border-radius: 16px;
-            padding: 35px;
-            backdrop-filter: blur(8px);
-        }
-
-        .app-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
+        .app-section { width: 100%; background: rgba(8, 8, 8, 0.85); border: 1px solid rgba(255, 0, 0, 0.15); border-radius: 16px; padding: 35px; backdrop-filter: blur(8px); }
+        .app-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 768px) { .app-form { grid-template-columns: 1fr; } }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: relative;
-        }
-
+        .form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
         .form-group.full-width { grid-column: span 2; }
         @media (max-width: 768px) { .form-group.full-width { grid-column: span 1; } }
+        .form-group label { font-size: 0.9rem; color: #b3b3b3; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input, .form-group textarea { background: #141414; border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 6px; padding: 12px; color: #ffffff; font-size: 1rem; transition: all 0.3s ease; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #ff0000; box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); }
 
-        .form-group label {
-            font-size: 0.9rem;
-            color: #b3b3b3;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .error-msg { color: #ff3333; font-size: 0.85rem; font-weight: 600; margin-top: 4px; display: none; }
+        .input-error { border-color: #ff3333 !important; box-shadow: 0 0 8px rgba(255, 51, 51, 0.5) !important; }
 
-        .form-group input, .form-group textarea {
-            background: #141414;
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            border-radius: 6px;
-            padding: 12px;
-            color: #ffffff;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #ff0000;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-        }
-
-        /* ERROR MESSAGE FIELD */
-        .error-msg {
-            color: #ff3333;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 4px;
-            display: none;
-        }
-
-        .input-error {
-            border-color: #ff3333 !important;
-            box-shadow: 0 0 8px rgba(255, 51, 51, 0.5) !important;
-        }
-
-        /* --- RESULTS SCREEN --- */
-        .result-box {
-            background: rgba(10, 10, 10, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .result-status {
-            font-size: 2rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 20px 0;
-        }
-
+        .result-box { background: rgba(10, 10, 10, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 40px; text-align: center; max-width: 600px; margin: 0 auto; }
+        .result-status { font-size: 2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0; }
         .status-pending-ui { color: #ffaa00; text-shadow: 0 0 15px rgba(255, 170, 0, 0.4); }
         .status-accepted-ui { color: #00ff00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.4); }
         .status-rejected-ui { color: #ff0000; text-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
 
-        /* --- SUCCESS POPUP --- */
-        .success-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .success-box {
-            background: #0a0a0a;
-            border: 2px solid #00ff00;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
-            animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
+        .success-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .success-box { background: #0a0a0a; border: 2px solid #00ff00; border-radius: 16px; padding: 40px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popUp { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .success-box i { font-size: 4rem; color: #00ff00; margin-bottom: 20px; }
         .success-text { font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 25px; }
@@ -427,7 +82,6 @@
 
     <canvas id="bgCanvas"></canvas>
 
-    <!-- PRELOADER -->
     <div id="preloader">
         <div class="loader-content">
             <img src="logo.png" alt="Loading..." class="site-logo" style="width: 120px; height: 120px;">
@@ -435,12 +89,11 @@
         </div>
     </div>
 
-    <!-- SUCCESS POPUP MID-SCREEN -->
     <div class="success-overlay" id="successOverlay">
         <div class="success-box">
             <i class="fas fa-check-circle"></i>
-            <p class="success-text">✅ Your application has been submitted successfully to 204 TEAM!</p>
-            <button class="btn-success-close" onclick="closeSuccessPopup()">Close & Return</button>
+            <p class="success-text">✅ Your application has been logged to the core and synced with Discord!</p>
+            <button class="btn-success-close" onclick="closeSuccessPopup()">Close & View Status</button>
         </div>
     </div>
 
@@ -448,7 +101,6 @@
         <a href="https://discord.gg/RJBTwDDZmQ" class="social-icon discord" target="_blank"><i class="fab fa-discord"></i></a>
     </div>
 
-    <!-- LOGIN SCREEN -->
     <div class="login-screen" id="loginScreen">
         <img src="logo.png" alt="204 Team Logo" class="site-logo">
         <h1 class="brand-title">204 TEAM</h1>
@@ -458,10 +110,8 @@
         </a>
     </div>
 
-    <!-- CENTRAL MAIN HUB -->
     <div class="main-hub" id="mainHub">
         
-        <!-- TOP NAVIGATION CATEGORIES -->
         <div class="hub-navbar" id="hubNavbar">
             <button class="nav-btn active" id="btnPageDownloads" onclick="switchPage('downloads')"><i class="fas fa-download"></i> Portal Downloads</button>
             <button class="nav-btn" id="btnPageApplication" onclick="switchPage('application')"><i class="fas fa-edit"></i> Team Application</button>
@@ -474,7 +124,6 @@
             <p class="login-desc" id="hubMainDesc" style="color: #666; margin-top: 5px;">Access your team files and portal applications below.</p>
         </div>
 
-        <!-- CATEGORY 1: DOWNLOADS -->
         <div id="pageDownloads" class="hub-page active-page">
             <div class="grid-downloads">
                 <div class="download-card">
@@ -507,7 +156,6 @@
             </div>
         </div>
 
-        <!-- CATEGORY 2: APPLICATION FORM -->
         <div id="pageApplication" class="hub-page">
             <div class="app-section">
                 <form class="app-form" id="teamAppForm" novalidate>
@@ -516,9 +164,9 @@
                         <input type="text" id="appName" placeholder="e.g. Trippy" required>
                     </div>
                     <div class="form-group">
-                        <label for="appDiscord">Discord Tag / ID</label>
+                        <label for="appDiscord">Discord Username (No @)</label>
                         <input type="text" id="appDiscord" placeholder="e.g. trippy204" required>
-                        <span class="error-msg" id="errorDiscord">❌ Invalid Discord ID. Use only letters, numbers, dots, or underscores (No @ or spaces).</span>
+                        <span class="error-msg" id="errorDiscord">❌ Invalid Discord format. Use letters, numbers, dots, or underscores.</span>
                     </div>
                     <div class="form-group">
                         <label for="appAge">Your Age (Minimum 19)</label>
@@ -527,11 +175,11 @@
                     </div>
                     <div class="form-group">
                         <label for="appRole">Your Skills / Talents</label>
-                        <input type="text" id="appRole" placeholder="e.g. Lua Scripting, Mapping, NUI Design..." required>
+                        <input type="text" id="appRole" placeholder="e.g. Lua Scripting, Mapping, UI..." required>
                     </div>
                     <div class="form-group full-width">
                         <label for="appExperience">Why do you want to join 204 TEAM?</label>
-                        <textarea id="appExperience" placeholder="Tell us about your previous work..." required></textarea>
+                        <textarea id="appExperience" placeholder="Tell us about your work..." required></textarea>
                     </div>
                     <div class="form-group full-width">
                         <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit Application</button>
@@ -540,11 +188,11 @@
             </div>
         </div>
 
-        <!-- CATEGORY 3: APPLICATION RESULT -->
         <div id="pageResult" class="hub-page">
             <div class="result-box">
                 <div id="resultContent">
-                    <!-- Loaded dynamically via JavaScript -->
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #ff0000;"></i>
+                    <p style="margin-top: 15px; color: #aaa;">Syncing database status...</p>
                 </div>
             </div>
         </div>
@@ -552,114 +200,84 @@
     </div>
 
     <script>
-        // --- CLASSIC SNOW EFFECT ---
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
+        // ⚠️ SUPABASE CONFIGURATION LINK ⚠️ (BADALHADHOM B-DATA MTE3EK)
+const SUPABASE_URL = 'https://yijvbiqvmdhvqnefjpnn.supabase.co'; 
+const SUPABASE_ANON_KEY = 'sb_publishable_5YpVnBnhUHJeecd1tMPj3w_1jfGieqY';
+        
+        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        // --- BACKGROUND EFFECT ---
+        const canvas = document.getElementById('bgCanvas'); const ctx = canvas.getContext('2d');
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         resizeCanvas(); window.addEventListener('resize', resizeCanvas);
         const numFlakes = 65; const flakes = [];
-        for (let i = 0; i < numFlakes; i++) {
-            flakes.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 3 + 1, d: Math.random() * numFlakes, speed: Math.random() * 1.5 + 0.5 });
-        }
+        for (let i = 0; i < numFlakes; i++) { flakes.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 3 + 1, d: Math.random() * numFlakes, speed: Math.random() * 1.5 + 0.5 }); }
         function drawSnowEffect() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = 'rgba(255, 255, 255, 0.45)'; ctx.beginPath();
             for (let i = 0; i < numFlakes; i++) {
-                const f = flakes[i]; ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
-                f.y += f.speed; f.x += Math.sin(f.d / 10) * 0.4;
+                const f = flakes[i]; ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true); f.y += f.speed; f.x += Math.sin(f.d / 10) * 0.4;
                 if (f.y > canvas.height) { flakes[i] = { x: Math.random() * canvas.width, y: 0, r: f.r, d: f.d, speed: f.speed }; }
             }
             ctx.fill();
         }
         setInterval(drawSnowEffect, 25);
 
-        // --- FIXED NAVIGATION TABS CONTROLLER ---
+        // --- PAGE SWITCHER (FIXED NAVIGATION) ---
         function switchPage(pageName) {
-            // Select all layout fields safely
-            const pages = {
-                downloads: document.getElementById('pageDownloads'),
-                application: document.getElementById('pageApplication'),
-                result: document.getElementById('pageResult')
-            };
+            const pages = { downloads: document.getElementById('pageDownloads'), application: document.getElementById('pageApplication'), result: document.getElementById('pageResult') };
+            const buttons = { downloads: document.getElementById('btnPageDownloads'), application: document.getElementById('btnPageApplication'), result: document.getElementById('btnPageResult') };
 
-            const buttons = {
-                downloads: document.getElementById('btnPageDownloads'),
-                application: document.getElementById('btnPageApplication'),
-                result: document.getElementById('btnPageResult')
-            };
-
-            // Hide everything first to reset tracking states
             Object.keys(pages).forEach(key => {
-                if(pages[key]) pages[key].classList.remove('active-page');
-                if(pages[key]) pages[key].style.display = 'none';
+                if(pages[key]) { pages[key].classList.remove('active-page'); pages[key].style.display = 'none'; }
                 if(buttons[key]) buttons[key].classList.remove('active');
             });
             
-            // Show target page context active parameters
-            const targetPage = pages[pageName.toLowerCase()];
-            const targetBtn = buttons[pageName.toLowerCase()];
+            const targetPage = pages[pageName.toLowerCase()]; const targetBtn = buttons[pageName.toLowerCase()];
+            if (targetPage && targetBtn) { targetPage.classList.add('active-page'); targetPage.style.display = 'block'; targetBtn.classList.add('active'); }
 
-            if (targetPage && targetBtn) {
-                targetPage.classList.add('active-page');
-                targetPage.style.display = 'block';
-                targetBtn.classList.add('active');
-            }
-
-            const mainTitle = document.getElementById('hubMainTitle');
-            const mainDesc = document.getElementById('hubMainDesc');
-
-            if (pageName === 'downloads') {
-                mainTitle.innerText = "204 TEAM HUB"; mainDesc.innerText = "Access your team files and portal applications below.";
-            } else if (pageName === 'application') {
-                mainTitle.innerText = "TEAM REGISTRATION"; mainDesc.innerText = "Fill out the fields carefully to apply.";
-            } else if (pageName === 'result') {
-                mainTitle.innerText = "YOUR STATUS COMPLIANCE"; mainDesc.innerText = "Check updates on your recruitment request entry.";
-                loadApplicationResult(); 
-            }
+            const mainTitle = document.getElementById('hubMainTitle'); const mainDesc = document.getElementById('hubMainDesc');
+            if (pageName === 'downloads') { mainTitle.innerText = "204 TEAM HUB"; mainDesc.innerText = "Access your team files and portal applications below."; }
+            else if (pageName === 'application') { mainTitle.innerText = "TEAM REGISTRATION"; mainDesc.innerText = "Fill out the fields carefully to apply."; }
+            else if (pageName === 'result') { mainTitle.innerText = "YOUR STATUS COMPLIANCE"; mainDesc.innerText = "Check updates on your recruitment request entry."; loadApplicationResult(); }
         }
 
-        // --- RENDER DYNAMIC RESULTS FIELD ---
-        function loadApplicationResult() {
-            const status = localStorage.getItem('204_app_status') || 'none';
+        // --- REAL-TIME DATABASE STATUS VERIFIER ---
+        async function loadApplicationResult() {
             const resContent = document.getElementById('resultContent');
             if(!resContent) return;
 
-            if (status === 'none') {
-                resContent.innerHTML = `
-                    <i class="fas fa-question-circle" style="font-size: 3.5rem; color: #555;"></i>
-                    <h2 class="result-status" style="color: #888;">No Active Application</h2>
-                    <p style="color: #aaa;">You haven't submitted any recruitment form yet or your logs were cleared.</p>
-                `;
-            } else if (status === 'pending') {
-                resContent.innerHTML = `
-                    <i class="fas fa-clock" style="font-size: 4rem; color: #ffaa00;"></i>
-                    <h2 class="result-status status-pending-ui">Status: Pending Verification</h2>
-                    <p style="color: #ccc;">Your submission is currently routing in our validation systems. Check back soon for review updates.</p>
-                `;
+            const savedDiscord = localStorage.getItem('204_user_discord');
+            if (!savedDiscord) {
+                resContent.innerHTML = `<i class="fas fa-question-circle" style="font-size: 3.5rem; color: #555;"></i><h2 class="result-status" style="color: #888;">No Active Application</h2><p style="color: #aaa;">You haven't submitted any recruitment form yet from this browser.</p>`;
+                return;
+            }
+
+            if (!supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+                resContent.innerHTML = `<i class="fas fa-exclamation-triangle" style="font-size: 3.5rem; color: #ff3333;"></i><h2 class="result-status" style="color: #ff3333;">Config Error</h2><p style="color: #aaa;">Database connection keys missing or invalid.</p>`;
+                return;
+            }
+
+            // Fetch live data directly from the table matching discord_id
+            const { data, error } = await supabase.from('applications').select('status').eq('discord_id', savedDiscord).maybeSingle();
+
+            if (error || !data) {
+                resContent.innerHTML = `<i class="fas fa-question-circle" style="font-size: 3.5rem; color: #555;"></i><h2 class="result-status" style="color: #888;">No Data Found</h2><p style="color: #aaa;">Could not locate application records for \`${savedDiscord}\`.</p>`;
+                return;
+            }
+
+            const status = data.status;
+            if (status === 'pending') {
+                resContent.innerHTML = `<i class="fas fa-clock" style="font-size: 4rem; color: #ffaa00;"></i><h2 class="result-status status-pending-ui">Status: Pending Verification</h2><p style="color: #ccc;">Your submission for <b>${savedDiscord}</b> is currently under review by management.</p>`;
             } else if (status === 'accepted') {
-                resContent.innerHTML = `
-                    <i class="fas fa-check-double" style="font-size: 4rem; color: #00ff00;"></i>
-                    <h2 class="result-status status-accepted-ui">Status: Accepted</h2>
-                    <p style="color: #ccc;">Welcome to the inner circle. Your profile matches 204 TEAM protocols.</p>
-                `;
+                resContent.innerHTML = `<i class="fas fa-check-double" style="font-size: 4rem; color: #00ff00;"></i><h2 class="result-status status-accepted-ui">Status: Accepted</h2><p style="color: #ccc;">Welcome to 204 TEAM! Your recruitment profile was approved.</p>`;
             } else if (status === 'rejected') {
-                resContent.innerHTML = `
-                    <i class="fas fa-times-circle" style="font-size: 4rem; color: #ff0000;"></i>
-                    <h2 class="result-status status-rejected-ui">Status: Rejected</h2>
-                    <p style="color: #ccc;">Access credentials denied. Your application did not meet operational minimums.</p>
-                `;
+                resContent.innerHTML = `<i class="fas fa-times-circle" style="font-size: 4rem; color: #ff0000;"></i><h2 class="result-status status-rejected-ui">Status: Rejected</h2><p style="color: #ccc;">Access denied. Your profile does not match our current parameters.</p>`;
             }
         }
 
-        // --- PRELOADER & AUTH LINK CHECKS ---
+        // --- INITIAL WINDOW LOADER ---
         window.onload = function() {
-            setTimeout(() => {
-                const preloader = document.getElementById('preloader');
-                if(preloader) {
-                    preloader.style.opacity = '0'; 
-                    preloader.style.visibility = 'hidden';
-                }
-            }, 1000);
-
+            setTimeout(() => { const preloader = document.getElementById('preloader'); if(preloader) { preloader.style.opacity = '0'; preloader.style.visibility = 'hidden'; } }, 1000);
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('code') || localStorage.getItem('204_authorized') === 'true') {
                 localStorage.setItem('204_authorized', 'true');
@@ -671,100 +289,79 @@
             loadApplicationResult();
         };
 
-        function closeSuccessPopup() {
-            document.getElementById('successOverlay').style.display = 'none';
-            switchPage('result');
-        }
+        function closeSuccessPopup() { document.getElementById('successOverlay').style.display = 'none'; switchPage('result'); }
 
-        // --- FORM SUBMIT & MULTI-FIELD DATA VALIDATIONS ---
-        document.getElementById('teamAppForm').addEventListener('submit', function(e) {
+        // --- SUBMIT HANDLING WITH DATABASE CAPTURE ---
+        document.getElementById('teamAppForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
             let hasErrors = false;
-            const inputDiscord = document.getElementById('appDiscord');
-            const inputAge = document.getElementById('appAge');
-            const errDiscord = document.getElementById('errorDiscord');
-            const errAge = document.getElementById('errorAge');
+            const inputDiscord = document.getElementById('appDiscord'); const inputAge = document.getElementById('appAge');
+            const errDiscord = document.getElementById('errorDiscord'); const errAge = document.getElementById('errorAge');
 
             inputDiscord.classList.remove('input-error'); errDiscord.style.display = 'none';
             inputAge.classList.remove('input-error'); errAge.style.display = 'none';
 
-            // 1. AGE CHECK (Must be 19+)
             const ageVal = parseInt(inputAge.value);
-            if (isNaN(ageVal) || ageVal < 19) {
-                inputAge.classList.add('input-error');
-                errAge.style.display = 'block';
-                hasErrors = true;
-            }
+            if (isNaN(ageVal) || ageVal < 19) { inputAge.classList.add('input-error'); errAge.style.display = 'block'; hasErrors = true; }
 
-            // 2. DISCORD ID SYNTAX CHECK
-            const discordVal = inputDiscord.value.trim();
+            const discordVal = inputDiscord.value.trim().toLowerCase();
             const discordRegex = /^[a-zA-Z0-9._]{2,32}$/; 
-            if (!discordRegex.test(discordVal) || discordVal.includes('@')) {
-                inputDiscord.classList.add('input-error');
-                errDiscord.style.display = 'block';
-                hasErrors = true;
-            }
+            if (!discordRegex.test(discordVal) || discordVal.includes('@')) { inputDiscord.classList.add('input-error'); errDiscord.style.display = 'block'; hasErrors = true; }
 
-            if (hasErrors) return; 
+            if (hasErrors) return;
 
-            // ⚠️ INPUT YOUR PRIMARY LINK WEBHOOK HERE ⚠️
-            const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
-
-            if (DISCORD_WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
-                localStorage.setItem('204_app_status', 'pending');
-                document.getElementById('successOverlay').style.display = 'flex';
-                return;
-            }
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Writing to core database...';
 
             const name = document.getElementById('appName').value;
             const skills = document.getElementById('appRole').value;
             const experience = document.getElementById('appExperience').value;
 
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing protocols...';
+            // 1. INJECT TO DATABASE FIRST
+            if (supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                const { error: dbError } = await supabase.from('applications').upsert([
+                    { name: name, discord_id: discordVal, age: ageVal, skills: skills, experience: experience, status: 'pending' }
+                ], { onConflict: 'discord_id' });
 
-            const payload = {
-                username: "204 Team Portal Core",
-                avatar_url: "https://trippy-204.github.io/204-Team/logo.png",
-                embeds: [{
-                    title: "📥 NEW REGISTER INBOUND REPORT",
-                    color: 16753920, 
-                    description: "Review metadata credentials parameters below. Action buttons route decision parameters downstream directly to management channels.",
-                    fields: [
-                        { name: "👤 Candidate Ingame Tag", value: name, inline: true },
-                        { name: "🎮 Discord Identity Access", value: `\`${discordVal}\``, inline: true },
-                        { name: "⏳ Declared Age Unit", value: String(ageVal), inline: true },
-                        { name: "⚡ Processing System Skills", value: skills, inline: false },
-                        { name: "📝 Context Experience Log", value: experience, inline: false }
-                    ],
-                    footer: { text: "Management Review Required Protocol" },
-                    timestamp: new Date()
-                }],
-                content: `⚡ **Verification Required:** Reply with \`!approve ${discordVal}\` or \`!deny ${discordVal}\` in logs channel to sync dashboard results status.`
-            };
-
-            fetch(DISCORD_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                if (response.ok) {
-                    localStorage.setItem('204_app_status', 'pending'); 
-                    document.getElementById('successOverlay').style.display = 'flex';
-                    document.getElementById('teamAppForm').reset();
-                } else {
-                    alert('❌ Webhook error context delivery block.');
+                if (dbError) {
+                    console.error(dbError);
+                    alert('❌ Database error: Account may already have a pending submission.');
+                    submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error(error); alert('❌ Direct synchronization connection failure.');
-            })
-            .finally(() => {
-                submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
-            });
+            }
+
+            localStorage.setItem('204_user_discord', discordVal);
+
+            // 2. DISPATCH DISCORD NOTIFICATION (BADAL EL-WEBHOOK METE3EK HNA)
+            const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
+            if (DISCORD_WEBHOOK_URL !== 'YOUR_WEBHOOK_URL_HERE') {
+                const payload = {
+                    username: "204 Team Portal Core",
+                    avatar_url: "https://trippy-204.github.io/204-Team/logo.png",
+                    embeds: [{
+                        title: "📥 NEW REGISTER INBOUND REPORT",
+                        color: 16753920,
+                        description: `Review parameters below. Go to your Supabase Dashboard Table to change the status column value for **${discordVal}** to \`accepted\` or \`rejected\`.`,
+                        fields: [
+                            { name: "👤 Candidate Tag", value: name, inline: true },
+                            { name: "🎮 Discord ID", value: `\`${discordVal}\``, inline: true },
+                            { name: "⏳ Declared Age", value: String(ageVal), inline: true },
+                            { name: "⚡ System Skills", value: skills, inline: false },
+                            { name: "📝 Experience Log", value: experience, inline: false }
+                        ],
+                        timestamp: new Date()
+                    }]
+                };
+
+                await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(err => console.log(err));
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+            document.getElementById('successOverlay').style.display = 'flex';
+            document.getElementById('teamAppForm').reset();
         });
     </script>
 </body>
