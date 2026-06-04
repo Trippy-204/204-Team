@@ -219,14 +219,14 @@
             margin-bottom: 20px;
         }
 
-        /* LIVE STATUS INDICATOR (BLINKING DOT) */
+        /* --- STATUS CLASSES (RED FOR UNDETECTED, GREEN FOR DETECTED) --- */
         .status-container {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             margin-bottom: 15px;
             font-size: 0.85rem;
-            color: #00ff00;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -235,13 +235,36 @@
         .status-dot {
             width: 8px;
             height: 8px;
-            background-color: #00ff00;
             border-radius: 50%;
-            box-shadow: 0 0 10px #00ff00;
-            animation: blink 1.5s infinite;
         }
 
-        @keyframes blink {
+        /* Red Status (Undetected) */
+        .status-undetected {
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+        }
+        .status-undetected .status-dot {
+            background-color: #ff0000;
+            box-shadow: 0 0 10px #ff0000;
+            animation: blink-red 1.5s infinite;
+        }
+        @keyframes blink-red {
+            0% { opacity: 0.3; box-shadow: 0 0 2px #ff0000; }
+            50% { opacity: 1; box-shadow: 0 0 12px #ff0000; }
+            100% { opacity: 0.3; box-shadow: 0 0 2px #ff0000; }
+        }
+
+        /* Green Status (Detected) */
+        .status-detected {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+        }
+        .status-detected .status-dot {
+            background-color: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            animation: blink-green 1.5s infinite;
+        }
+        @keyframes blink-green {
             0% { opacity: 0.3; box-shadow: 0 0 2px #00ff00; }
             50% { opacity: 1; box-shadow: 0 0 12px #00ff00; }
             100% { opacity: 0.3; box-shadow: 0 0 2px #00ff00; }
@@ -313,9 +336,10 @@
                     <p class="card-desc">Spotify Premium Version By Trippy.</p>
                 </div>
                 <div>
-                    <div class="status-container">
+                    <!-- Jomla kamla bil-akhdhar (Detected) -->
+                    <div class="status-container status-detected">
                         <span class="status-dot"></span>
-                        <span>Status: Operational</span>
+                        <span>Status: Detected</span>
                     </div>
                     <a href="https://cdn.discordapp.com/attachments/1499459694752698438/1512190627193028728/Spotify_Premium.zip?ex=6a2330c4&is=6a21df44&hm=9f2a4a6a78713643e7c3702686760e61912762acf82944b2010836586bf3ca58&" class="btn-download"><i class="fas fa-download"></i> Download</a>
                 </div>
@@ -329,7 +353,8 @@
                     <p class="card-desc">Ultra fast key-remapper and clicker optimized for lag reduction.</p>
                 </div>
                 <div>
-                    <div class="status-container">
+
+                    <div class="status-container status-undetected">
                         <span class="status-dot"></span>
                         <span>Status: Undetected</span>
                     </div>
@@ -345,10 +370,14 @@
                     <p class="card-desc">Custom physics adjustments for cleaner movement and turns.</p>
                 </div>
                 <div>
-                    <div class="status-container">
+                    <!-- Jomla kamla bil-a7mer (Undetected) -->
+                    <div class="status-container status-detected">
                         <span class="status-dot"></span>
-                        <span>Status: Undetected</span>
+                        <span>Status: Detected</span>
                     </div>
+                    <a href="https://cdn.discordapp.com/attachments/1423586049539575879/1423593368314843186/SPOILER_Fuzzy_Strafe_2_1.zip?ex=6a2336e4&is=6a21e564&hm=874423ff3f97aa045812674e095de7db781418e7394a36bcde90f9953f03fc17&" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                </div>
+            </div>
                     <a href="#" class="btn-download"><i class="fas fa-download"></i> Download</a>
                 </div>
             </div>
@@ -357,7 +386,7 @@
 
     <script>
         window.onload = function() {
-            // Sakket el Preloader automatic ba3d d9i9tin melli l-page t-7el
+            // Sakket el Preloader automatic ba3d 1 sanya mel-khidma
             setTimeout(function() {
                 const preloader = document.getElementById('preloader');
                 preloader.style.opacity = '0';
