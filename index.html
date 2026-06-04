@@ -169,6 +169,33 @@
             font-weight: 700;
             box-shadow: 0 0 15px #ff0000;
         }
+.social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-icon {
+            color: #b3b3b3;
+            font-size: 1.3rem;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Alwén dynamic ki t7ot l-Souris 3la les boutons */
+        .social-icon:hover {
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+        .social-icon.discord:hover { background-color: #5865F2; }
     </style>
 </head>
 <body>
@@ -196,28 +223,15 @@
                 <div>
                     <div class="card-icon"><i class="fab fa-spotify"></i></div>
                     <h2 class="card-title">Spotify Premium</h2>
-                    <p class="card-desc">Modded desktop/mobile version with adblock and unlimited skips.</p>
+                    <p class="card-desc">Spotify Premium Version By Trippy .</p>
                 </div>
-                <a href="https://example.com/spotify-premium.zip" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                <a href="https://cdn.discordapp.com/attachments/1499459694752698438/1512190627193028728/Spotify_Premium.zip?ex=6a2330c4&is=6a21df44&hm=9f2a4a6a78713643e7c3702686760e61912762acf82944b2010836586bf3ca58&" class="btn-download"><i class="fas fa-download"></i> Download</a>
             </div>
-
-            <div class="download-card">
-                <div>
-                    <div class="card-icon"><i class="fas fa-keyboard"></i></div>
-                    <h2 class="card-title">Macro Script</h2>
-                    <p class="card-desc">Ultra fast key-remapper and clicker script optimized for PvP delay reduction.</p>
-                </div>
-                <a href="https://example.com/macro-setup.exe" class="btn-download"><i class="fas fa-download"></i> Download</a>
-            </div>
-
-            <div class="download-card">
-                <div>
-                    <div class="card-icon"><i class="fas fa-wind"></i></div>
-                    <h2 class="card-title">Strafe Pack</h2>
-                    <p class="card-desc">Custom movement physics adjustments for cleaner strafes and turns.</p>
-                </div>
-                <a href="https://example.com/strafe-pack.zip" class="btn-download"><i class="fas fa-download"></i> Download</a>
-            </div>
+            <div class="social-links">
+            <!-- Discord -->
+            <a href="https://discord.gg/RJBTwDDZmQ" class="social-icon discord" target="_blank" title="Join Discord">
+                <i class="fab fa-discord"></i>
+            </a>
         </div>
     </div>
 
