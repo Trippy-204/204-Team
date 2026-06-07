@@ -3,325 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>204 Team - Premium Hub</title>
+    <title>204 Team - Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- PREMIUM FUTURISTIC RED & BLACK THEME --- */
+        /* --- CORE STYLING (DARK GOTHIC) --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
         }
 
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #070708;
+            background: #050507;
         }
         ::-webkit-scrollbar-thumb {
-            background: #ff003c;
+            background: #5c0011;
             border-radius: 4px;
         }
 
         body {
-            background-color: #070708;
-            /* خلفية غامقة وراقية مع إضاءة خفيفة في الوسط والأطراف عوض الهاكرز */
-            background-image: radial-gradient(circle at 50% 50%, #150206 0%, #070708 100%);
-            color: #ffffff;
+            background: #050507;
+            color: #e2e8f0;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
+            overflow: hidden; 
             position: relative;
         }
 
-        /* --- PRELOADER --- */
-        #preloader {
+        /* ==========================================
+           🎬 DARK PREMIUM INTRO
+           ========================================== */
+        #cinematicIntro {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #070708;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000;
+            background-image: radial-gradient(circle at 50% 50%, #170004 0%, #000000 100%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: all;
+        }
+
+        .intro-fade-out {
+            animation: introExit 0.9s cubic-bezier(0.77, 0, 0.175, 1) forwards !important;
+        }
+
+        @keyframes introExit {
+            to { opacity: 0; visibility: hidden; transform: scale(1.02); }
+        }
+
+        .intro-logo-container { position: relative; margin-bottom: 25px; }
+
+        .intro-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            animation: darkRedPulse 2s infinite alternate ease-in-out;
+        }
+
+        .intro-text {
+            color: #800020;
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(128, 0, 32, 0.7);
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        @keyframes darkRedPulse {
+            0% { filter: drop-shadow(0 0 10px rgba(92, 0, 17, 0.4)) scale(0.97); }
+            100% { filter: drop-shadow(0 0 35px rgba(128, 0, 32, 0.8)) scale(1.02); }
+        }
+
+        /* ==========================================
+           🔔 ALERT TOAST
+           ========================================== */
+        .update-toast {
+            position: fixed;
+            top: -100px;
+            right: 20px;
+            background: #0b0b0f;
+            border-left: 4px solid #800020;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            border-right: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding: 15px 25px;
+            border-radius: 4px;
             z-index: 9999;
             display: flex;
-            justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        
-        .loader-content {
-            text-align: center;
-        }
-
-        .loader-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 0, 60, 0.1);
-            border-radius: 50%;
-            border-top-color: #ff003c;
-            margin: 20px auto 0;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* --- NAVIGATION NAVBAR --- */
-        .hub-navbar {
-            display: none;
-            justify-content: center;
             gap: 15px;
-            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .update-toast.show { top: 20px; }
+        .update-toast i { color: #ff3355; font-size: 1.2rem; }
+        .update-toast class="close-toast" { cursor: pointer; color: #718096; margin-left: 10px; }
+        .update-toast class="close-toast":hover { color: #ffffff; }
+
+        /* ==========================================
+           💻 MAIN CONTENT
+           ========================================== */
+        #mainSiteContent {
+            opacity: 0;
+            transform: translateY(15px);
             width: 100%;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 0, 60, 0.3);
-            color: #aaaaaa;
-            padding: 14px 28px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background: rgba(255, 0, 60, 0.1);
-            border-color: #ff003c;
-            color: #ffffff;
-            box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
-        }
-
-        .top-right-social {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            z-index: 100;
-        }
-
-        .social-icon {
-            color: #ffffff;
-            font-size: 1.3rem;
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.03);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 0, 60, 0.3);
-        }
-
-        .social-icon:hover {
-            background-color: #ff003c;
-            border-color: #ff003c;
-            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
-            transform: translateY(-2px);
-        }
-
-        /* --- LOGIN SCREEN --- */
-        .login-screen {
-            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
-            padding: 50px 40px;
-            z-index: 10;
-            background: rgba(15, 15, 18, 0.6);
-            border: 1px solid rgba(255, 0, 60, 0.2);
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(20px);
-            max-width: 440px;
-            width: 90%;
         }
 
-        .site-logo {
-            width: 120px;
-            height: 120px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(255, 0, 60, 0.3));
-        }
+        .site-fade-in-active { animation: premiumFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes premiumFadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        .brand-title {
-            font-size: 2.8rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: #ffffff;
-        }
-
-        .login-desc {
-            color: #999999;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .btn-discord {
-            background-color: #ff003c;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 0 25px rgba(255, 0, 60, 0.3);
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .btn-discord:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(255, 0, 60, 0.5);
-            background-color: #ff1a53;
-        }
-
-        /* --- MAIN HUB --- */
-        .main-hub {
-            display: none; 
-            flex-direction: column;
-            align-items: center;
+        /* --- TOP UTILITIES --- */
+        .top-bar {
             width: 100%;
             max-width: 1100px;
-            padding: 40px 20px;
-            z-index: 10;
-        }
-
-        .hub-header {
-            text-align: center;
-            margin-bottom: 45px;
-        }
-
-        .hub-page {
-            display: none;
-            width: 100%;
-        }
-
-        .hub-page.active-page {
-            display: block !important;
-        }
-
-        /* --- CARD DOWNLOADS --- */
-        .grid-downloads {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            width: 100%;
-        }
-
-        .download-card {
-            background: rgba(20, 20, 25, 0.6);
-            border: 1px solid rgba(255, 0, 60, 0.15);
-            border-radius: 12px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            height: 350px;
-            backdrop-filter: blur(10px);
+            padding: 30px 20px;
         }
 
-        .download-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 0, 60, 0.5);
-            box-shadow: 0 15px 30px rgba(255, 0, 60, 0.1);
-            background: rgba(25, 25, 30, 0.8);
-        }
+        .lang-switcher { display: flex; gap: 10px; }
 
-        .card-icon {
-            font-size: 3.2rem;
-            margin-bottom: 20px;
-            color: #ff003c;
-        }
-
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #ffffff;
-        }
-
-        .card-desc {
-            color: #8a8a93;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* --- STATUS SETTINGS --- */
-        .status-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 20px;
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #a0aec0;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .status-undetected { color: #00ff66; }
-        .status-undetected .status-dot { background-color: #00ff66; box-shadow: 0 0 10px #00ff66; }
-        
-        .status-detected { color: #ff003c; }
-        .status-detected .status-dot { background-color: #ff003c; box-shadow: 0 0 10px #ff003c; }
-
-        .btn-download, .btn-submit, .btn-success-close {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
+        .lang-btn:hover, .lang-btn.active {
+            background: #5c0011;
+            border-color: #800020;
             color: #ffffff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            background: #ff003c;
-            border: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            text-align: center;
-            display: inline-block;
+            box-shadow: 0 0 12px rgba(128, 0, 32, 0.3);
         }
 
-        .btn-download:hover, .btn-submit:hover, .btn-success-close:hover {
-            background: #ff1a53;
-            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+        .social-link {
+            color: #a0aec0; font-size: 1.2rem; width: 40px; height: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 4px; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .social-link:hover {
+            background: #5c0011; border-color: #800020; color: #ffffff;
+            box-shadow: 0 0 12px rgba(128, 0, 32, 0.3);
         }
 
-        /* --- REGISTRATION FORM --- */
-        .app-section {
-            width: 100%;
-            background: rgba(20, 20, 25, 0.6);
-            border: 1px solid rgba(255, 0, 60, 0.15);
-            border-radius: 12px;
-            padding: 40px;
-            backdrop-filter: blur(10px);
+        /* --- BRANDING --- */
+        .hub-branding { text-align: center; margin: 20px 0 40px; }
+        .site-logo { width: 95px; height: 95px; object-fit: contain; margin-bottom: 15px; }
+        .brand-title { font-size: 2.5rem; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; color: #ffffff; }
+        .brand-subtitle { color: #718096; font-size: 0.95rem; }
+
+        /* --- NAVIGATION --- */
+        .hub-navbar {
+            display: flex; justify-content: center; gap: 15px; margin-bottom: 45px;
+            background: rgba(255, 255, 255, 0.01); padding: 6px; border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-btn {
+            background: transparent; border: none; color: #718096; padding: 12px 26px;
+            border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 10px; position: relative;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(92, 0, 17, 0.2); color: #ff3355; border-bottom: 2px solid #800020;
+        }
+
+        .nav-badge {
+            position: absolute; top: 2px; right: 2px; width: 6px; height: 6px;
+            background: #ff3355; border-radius: 50%; display: none;
+        }
+
+        /* --- PAGES LAYOUT --- */
+        .main-container { width: 100%; max-width: 1100px; padding: 0 20px 60px; }
+        
+        /* 🎬 EFFECT: الـ Animation الخاص بالتنقيل بين الـ Categories */
+        .hub-page { 
+            display: none; 
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        .hub-page.active-page { 
+            display: block !important; 
+            animation: tabSwitchEffect 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes tabSwitchEffect {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- CARDS LAYOUT (DOWNLOADS) --- */
+        .grid-layout { display: flex; flex-direction: column; gap: 20px; }
+        
+        .download-card {
+            background: #0b0b0f; border-left: 4px solid #800020;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            border-right: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            border-radius: 4px; padding: 25px 30px;
+            display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        }
+
+        .card-details { display: flex; align-items: center; gap: 20px; }
+        
+        .card-icon {
+            font-size: 2rem; color: #ff3355; background: rgba(128, 0, 32, 0.1);
+            width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 4px;
+        }
+        .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; color: #ffffff; }
+        .card-desc { color: #718096; font-size: 0.9rem; }
+        .card-action-zone { display: flex; align-items: center; gap: 25px; }
+
+        /* --- BADGES & STATUSES --- */
+        .status-badge { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; padding: 6px 14px; border-radius: 4px; }
+        .status-operational { background: rgba(0, 200, 80, 0.06); color: #00c850; border: 1px solid rgba(0, 200, 80, 0.15); }
+        .status-operational .dot { width: 6px; height: 6px; background: #00c850; border-radius: 50%; }
+        .status-patched { background: rgba(128, 0, 32, 0.1); color: #ff3355; border: 1px solid rgba(128, 0, 32, 0.2); }
+        .status-patched .dot { width: 6px; height: 6px; background: #ff3355; border-radius: 50%; }
+
+        .btn-action {
+            background: #5c0011; border: 1px solid #800020; color: #ffffff;
+            padding: 12px 24px; border-radius: 4px; text-decoration: none;
+            font-weight: 600; font-size: 0.9rem; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-action:hover { background: #800020; box-shadow: 0 0 15px rgba(128, 0, 32, 0.4); }
+
+        /* ==========================================
+           🔥 NEW DESIGN: NEON DARK RED APPLICATION PANEL
+           ========================================== */
+        .form-panel {
+            background: #0b0b0f;
+            border: 2px solid #800020;
+            border-radius: 6px;
+            padding: 35px;
+            /* توهج نيون دموي خارجي للكارت بالكامل */
+            box-shadow: 0 0 25px rgba(128, 0, 32, 0.25), inset 0 0 15px rgba(128, 0, 32, 0.1);
+            position: relative;
         }
 
         .app-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 20px;
         }
 
         @media (max-width: 768px) { .app-form { grid-template-columns: 1fr; } }
@@ -337,404 +286,416 @@
 
         .form-group label {
             font-size: 0.85rem;
-            color: #aaaaaa;
+            color: #a0aec0;
             font-weight: 600;
         }
 
+        /* ستايل النيون الكاسح للـ Inputs */
         .form-group input, .form-group textarea {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 14px;
+            background: #050507;
+            border: 1px solid rgba(128, 0, 32, 0.4);
+            border-radius: 4px;
+            padding: 12px;
             color: #ffffff;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            box-shadow: 0 0 5px rgba(128, 0, 32, 0.1);
+            transition: all 0.25s ease-in-out;
         }
 
+        /* تأثير الفوكوس نيون مشع عند الكتابة */
         .form-group input:focus, .form-group textarea:focus {
             outline: none;
-            border-color: #ff003c;
-            background: rgba(0, 0, 0, 0.4);
+            border-color: #ff3355;
+            box-shadow: 0 0 15px rgba(255, 51, 85, 0.4), inset 0 0 5px rgba(255, 51, 85, 0.1);
+            background: #0d0003;
         }
 
-        .error-msg {
-            color: #ff003c;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 4px;
-            display: none;
+        /* --- STRINGS UPDATES CATEGORY --- */
+        .updates-wrapper { display: flex; flex-direction: column; gap: 15px; }
+        .update-string-item {
+            background: #0b0b0f;
+            border: 1px dashed rgba(128, 0, 32, 0.3);
+            border-radius: 4px; padding: 18px 25px;
+            display: flex; align-items: center; gap: 20px;
         }
-
-        .input-error {
-            border-color: #ff003c !important;
+        .update-date-badge {
+            background: rgba(128, 0, 32, 0.15); color: #ff3355;
+            padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;
+            border: 1px solid rgba(128, 0, 32, 0.3); white-space: nowrap;
         }
+        .update-text-content { color: #cbd5e0; font-size: 0.95rem; line-height: 1.5; }
 
-        /* --- RESULTS --- */
-        .result-box {
-            background: rgba(20, 20, 25, 0.6);
-            border: 1px solid rgba(255, 0, 60, 0.15);
-            border-radius: 12px;
-            padding: 50px;
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-            backdrop-filter: blur(10px);
+        /* --- OVERLAY MODALS --- */
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); z-index: 999; justify-content: center; align-items: center; backdrop-filter: blur(4px);
         }
-
-        .result-status {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 20px 0;
-        }
-
-        .status-pending-ui { color: #ffaa00; }
-        .status-accepted-ui { color: #00ff66; }
-        .status-rejected-ui { color: #ff003c; }
-
-        /* --- MODAL SUCCESS --- */
-        .success-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .success-box {
-            background: #070708;
-            border: 1px solid #00ff66;
-            border-radius: 12px;
-            padding: 45px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 255, 102, 0.1);
-        }
-
-        .success-box i { font-size: 3.8rem; color: #00ff66; margin-bottom: 20px; }
-        .success-text { font-size: 1.2rem; font-weight: 600; color: #ffffff; margin-bottom: 25px; }
+        .success-modal { background: #0b0b0f; border: 1px solid rgba(128, 0, 32, 0.2); padding: 40px; border-radius: 4px; max-width: 450px; width: 90%; text-align: center; }
+        .success-modal i { font-size: 3rem; color: #00c850; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <!-- PRELOADER -->
-    <div id="preloader">
-        <div class="loader-content">
-            <img src="logo.png" alt="Loading..." class="site-logo" style="width: 100px; height: 100px;">
-            <div class="loader-spinner"></div>
+    <!-- 🎬 GOTHIC DARK RED INTRO SCREEN -->
+    <div id="cinematicIntro">
+        <div class="intro-logo-container">
+            <img src="logo.png" alt="204 Logo Core" class="intro-logo">
         </div>
+        <div class="intro-text" id="introSystemText">204 TEAM</div>
     </div>
 
-    <!-- SUCCESS POPUP -->
-    <div class="success-overlay" id="successOverlay">
-        <div class="success-box">
-            <i class="fas fa-check-circle"></i>
-            <p class="success-text">Application submitted successfully to 204 Team.</p>
-            <button class="btn-success-close" style="background: #00ff66; color: #000000;" onclick="closeSuccessPopup()">Go to Dashboard</button>
-        </div>
+    <!-- 🔔 ALERT TOAST -->
+    <div class="update-toast" id="newUpdateToast">
+        <i class="fas fa-bell"></i>
+        <div id="toastMessageText" style="font-size: 0.9rem; font-weight:600;">New platform updates are available!</div>
+        <i class="fas fa-times class="close-toast"" onclick="dismissToast()"></i>
     </div>
 
-    <div class="top-right-social">
-        <a href="https://discord.gg/RJBTwDDZmQ" class="social-icon" target="_blank"><i class="fab fa-discord"></i></a>
-    </div>
-
-    <!-- LOGIN SCREEN -->
-    <div class="login-screen" id="loginScreen">
-        <img src="logo.png" alt="204 Team Logo" class="site-logo">
-        <h1 class="brand-title">204 TEAM</h1>
-        <p class="login-desc">Welcome to the official hub. Please authenticate with your Discord account to continue.</p>
-        <a href="https://discord.com/oauth2/authorize?client_id=1512167123764379749&response_type=code&redirect_uri=https%3A%2F%2Ftrippy-204.github.io%2F204-Team%2F&scope=identify" class="btn-discord">
-            <i class="fab fa-discord"></i> Connect with Discord
-        </a>
-    </div>
-
-    <!-- MAIN HUB -->
-    <div class="main-hub" id="mainHub">
+    <!-- 💻 MAIN HUB CONTENTS -->
+    <div id="mainSiteContent">
         
+        <!-- UTILITIES BAR -->
+        <div class="top-bar">
+            <div class="lang-switcher">
+                <button class="lang-btn active" id="langEn" onclick="toggleLanguage('en')">EN</button>
+                <button class="lang-btn" id="langAr" onclick="toggleLanguage('ar')">AR</button>
+            </div>
+            <a href="https://discord.gg/RJBTwDDZmQ" class="social-link" target="_blank">
+                <i class="fab fa-discord"></i>
+            </a>
+        </div>
+
+        <!-- MAIN HEADER -->
+        <div class="hub-branding">
+            <img src="logo.png" alt="204 Logo" class="site-logo">
+            <h1 class="brand-title" id="mainTitle">204 TEAM HUB</h1>
+            <p class="brand-subtitle" id="mainSubtitle">Access premium system utilities and registration node.</p>
+        </div>
+
         <!-- NAVBAR -->
-        <div class="hub-navbar" id="hubNavbar">
-            <button class="nav-btn active" id="btnPageDownloads" onclick="switchPage('downloads')"><i class="fas fa-download"></i> Downloads</button>
-            <button class="nav-btn" id="btnPageApplication" onclick="switchPage('application')"><i class="fas fa-wpforms"></i> Apply Now</button>
-            <button class="nav-btn" id="btnPageResult" onclick="switchPage('result')"><i class="fas fa-user-check"></i> Status Check</button>
+        <div class="hub-navbar">
+            <button class="nav-btn active" id="tabDownloads" onclick="switchTab('downloads')">
+                <i class="fas fa-layer-group"></i> <span id="textTabFiles">Files Storage</span>
+            </button>
+            <button class="nav-btn" id="tabApply" onclick="switchTab('apply')">
+                <i class="fas fa-file-signature"></i> <span id="textTabApply">Join Station</span>
+            </button>
+            <button class="nav-btn" id="tabUpdates" onclick="switchTab('updates')">
+                <i class="fas fa-history"></i> <span id="textTabUpdates">Updates</span>
+                <span class="nav-badge" id="updateBadge"></span>
+            </button>
         </div>
 
-        <div class="hub-header">
-            <img src="logo.png" alt="204 Team Logo" class="site-logo" style="width: 90px; height: 90px; margin-bottom: 15px;">
-            <h1 class="brand-title" id="hubMainTitle" style="font-size: 2.5rem;">Dashboard</h1>
-            <p class="login-desc" id="hubMainDesc">Manage your files and applications securely.</p>
-        </div>
-
-        <!-- DOWNLOADS -->
-        <div id="pageDownloads" class="hub-page active-page">
-            <div class="grid-downloads">
-                <div class="download-card">
-                    <div>
-                        <div class="card-icon"><i class="fab fa-spotify"></i></div>
-                        <h2 class="card-title">Spotify Premium</h2>
-                        <p class="card-desc">Clean and premium optimized build created by Trippy.</p>
-                    </div>
-                    <div style="width: 100%;">
-                        <div class="status-container status-detected">
-                            <span class="status-dot"></span><span>Needs Update</span>
+        <!-- CORE CONTAINERS -->
+        <div class="main-container">
+            
+            <!-- DOWNLOADS PAGE -->
+            <div id="pageDownloads" class="hub-page active-page">
+                <div class="grid-layout">
+                    <!-- CARD 1 -->
+                    <div class="download-card">
+                        <div class="card-details">
+                            <div class="card-icon"><i class="fab fa-spotify"></i></div>
+                            <div>
+                                <h3 class="card-title">Spotify Premium</h3>
+                                <p class="card-desc" id="descSpot">Optimized package built by Trippy development group.</p>
+                            </div>
                         </div>
-                        <a href="https://cdn.discordapp.com/attachments/1499459694752698438/1512190627193028728/Spotify_Premium.zip" class="btn-download"><i class="fas fa-download"></i> Download</a>
-                    </div>
-                </div>
-                
-                <div class="download-card">
-                    <div>
-                        <div class="card-icon"><i class="fas fa-sliders"></i></div>
-                        <h2 class="card-title">Macro Script</h2>
-                        <p class="card-desc">High-performance custom script for optimized system latency.</p>
-                    </div>
-                    <div style="width: 100%;">
-                        <div class="status-container status-undetected">
-                            <span class="status-dot"></span><span>Operational</span>
+                        <div class="card-action-zone">
+                            <div class="status-badge status-operational">
+                                <span class="dot"></span><span class="status-text-label" data-status="operational">Operational</span>
+                            </div>
+                            <a href="https://cdn.discordapp.com/attachments/1499736236305416273/1512516919155101777/Spotify_Premium.zip?ex=6a2703a6&is=6a25b226&hm=7088b44f35003394e8e9e2fdd46947c23b9a1a356d0412ca0d52600fc1d878a8&" class="btn-action">
+                                <i class="fas fa-download"></i> <span class="lblGet">Get File</span>
+                            </a>
                         </div>
-                        <a href="#" class="btn-download"><i class="fas fa-download"></i> Download</a>
+                    </div>
+
+                    <!-- CARD 2 -->
+                    <div class="download-card">
+                        <div class="card-details">
+                            <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                            <div>
+                                <h3 class="card-title">Latency Macro</h3>
+                                <p class="card-desc" id="descMac">Advanced configuration values mapped for registry adjustments.</p>
+                            </div>
+                        </div>
+                        <div class="card-action-zone">
+                            <div class="status-badge status-patched">
+                                <span class="dot"></span><span class="status-text-label" data-status="patched">Needs Update</span>
+                            </div>
+                            <a href="#" class="btn-action" style="opacity: 0.4; pointer-events: none; background: #111; border-color: #222;">
+                                <i class="fas fa-lock"></i> <span class="lblGet">Locked</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- APPLICATION FORM -->
-        <div id="pageApplication" class="hub-page">
-            <div class="app-section">
-                <form class="app-form" id="teamAppForm" novalidate>
-                    <div class="form-group">
-                        <label for="appName">Your Name / Nickname</label>
-                        <input type="text" id="appName" placeholder="e.g. Trippy" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="appDiscord">Discord Username</label>
-                        <input type="text" id="appDiscord" placeholder="e.g. trippy204" required>
-                        <span class="error-msg" id="errorDiscord">❌ Please enter a valid Discord username.</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="appAge">Your Age (Minimum 19)</label>
-                        <input type="number" id="appAge" placeholder="e.g. 19" required>
-                        <span class="error-msg" id="errorAge">❌ You must be at least 19 years old to join.</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="appRole">Main Skills</label>
-                        <input type="text" id="appRole" placeholder="e.g. Developer, Designer, Editor..." required>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="appExperience">Tell us about your experience</label>
-                        <textarea id="appExperience" rows="5" placeholder="Describe your background and why you want to join..." required></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit Application</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- RESULTS -->
-        <div id="pageResult" class="hub-page">
-            <div class="result-box">
-                <div id="resultContent">
-                    <!-- Dynamic Loading -->
+            <!-- 🔥 APPLICATION FORM PAGE WITH DARK RED NEON GLOW -->
+            <div id="pageApply" class="hub-page">
+                <div class="form-panel">
+                    <form class="app-form" id="mainRegistryForm">
+                        <div class="form-group">
+                            <label id="lblFormName">Your Name</label>
+                            <input type="text" id="formName" placeholder="Trippy" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblFormDiscord">Discord Id</label>
+                            <input type="number" id="formDiscord" placeholder="1299421377539084359" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblFormAge">Age (Minimum : 19)</label>
+                            <input type="number" id="formAge" placeholder="19" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblFormSkills">Core Skills</label>
+                            <input type="text" id="formSkills" placeholder="..." required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label id="lblFormExp">Background & Ambition Sheet</label>
+                            <textarea id="formExp" rows="5" placeholder="Tell us more about your skills..." required></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <button type="submit" class="btn-action" style="justify-content: center; padding: 15px; font-size: 1rem;"><i class="fas fa-paper-plane"></i> <span id="lblFormSubmit">Send Application</span></button>
+                        </div>
+                    </form>
                 </div>
             </div>
+
+            <!--📜 STRINGS UPDATES CATEGORY -->
+            <div id="pageUpdates" class="hub-page">
+                <div class="updates-wrapper">
+                    <div class="update-string-item">
+                        <span class="update-date-badge">2026-06-07</span>
+                        <p class="update-text-content" id="upLine1">Platform transition complete: Switched layout theme to Premium Dark Gothic and blood red colors.</p>
+                    </div>
+                    <div class="update-string-item">
+                        <span class="update-date-badge">2026-06-05</span>
+                        <p class="update-text-content" id="upLine2">Fixed status logic indicators inversion for global repositories.</p>
+                    </div>
+                    <div class="update-string-item">
+                        <span class="update-date-badge">2026-05-29</span>
+                        <p class="update-text-content" id="upLine3">Removed external Discord authorization layers for direct hub deployment access.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
+
+    <!-- OVERLAY SUCCESS POPUP -->
+    <div class="overlay" id="successOverlay">
+        <div class="success-modal">
+            <i class="fas fa-check-circle"></i>
+            <h3 id="modalTitle" style="margin-bottom: 10px;">Submission Received</h3>
+            <p id="modalDesc" style="color: #718096; margin-bottom: 25px;">Your recruitment request data has been synced.</p>
+            <button class="btn-action" onclick="closePopup()" id="modalBtn">Close</button>
+        </div>
+    </div>
+
 
     <script>
-        // --- NAVIGATION TABS CONTROLLER ---
-        function switchPage(pageName) {
-            const pages = {
-                downloads: document.getElementById('pageDownloads'),
-                application: document.getElementById('pageApplication'),
-                result: document.getElementById('pageResult')
-            };
+        const CURRENT_UPDATE_ID = "update_gothic_v3_2026";
 
-            const buttons = {
-                downloads: document.getElementById('btnPageDownloads'),
-                application: document.getElementById('btnPageApplication'),
-                result: document.getElementById('btnPageResult')
-            };
+        // --- TIMING ENGINE FOR INTRO & SMART TOAST ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const introScreen = document.getElementById('cinematicIntro');
+            const mainContent = document.getElementById('mainSiteContent');
 
-            Object.keys(pages).forEach(key => {
-                if(pages[key]) {
-                    pages[key].classList.remove('active-page');
-                    pages[key].style.display = 'none';
-                }
-                if(buttons[key]) buttons[key].classList.remove('active');
-            });
-            
-            const targetPage = pages[pageName.toLowerCase()];
-            const targetBtn = buttons[pageName.toLowerCase()];
-
-            if (targetPage && targetBtn) {
-                targetPage.classList.add('active-page');
-                targetPage.style.display = 'block';
-                targetBtn.classList.add('active');
-            }
-
-            const mainTitle = document.getElementById('hubMainTitle');
-            const mainDesc = document.getElementById('hubMainDesc');
-
-            if (pageName === 'downloads') {
-                mainTitle.innerText = "Dashboard"; 
-                mainDesc.innerText = "Manage your files and applications securely.";
-            } else if (pageName === 'application') {
-                mainTitle.innerText = "Join the Team"; 
-                mainDesc.innerText = "Fill out the form below to submit your application.";
-            } else if (pageName === 'result') {
-                mainTitle.innerText = "Application Status"; 
-                mainDesc.innerText = "Track the state of your submission.";
-                loadApplicationResult(); 
-            }
-        }
-
-        // --- RENDER DYNAMIC RESULTS FIELD ---
-        function loadApplicationResult() {
-            const status = localStorage.getItem('204_app_status') || 'none';
-            const resContent = document.getElementById('resultContent');
-            if(!resContent) return;
-
-            if (status === 'none') {
-                resContent.innerHTML = `
-                    <i class="fas fa-folder-open" style="font-size: 3.5rem; color: #444;"></i>
-                    <h2 class="result-status" style="color: #666;">No Application Found</h2>
-                    <p style="color: #888;">You haven't submitted any applications from this browser session yet.</p>
-                `;
-            } else if (status === 'pending') {
-                resContent.innerHTML = `
-                    <i class="fas fa-clock" style="font-size: 3.5rem; color: #ffaa00;"></i>
-                    <h2 class="result-status status-pending-ui">Under Review</h2>
-                    <p style="color: #aaa;">Your application is received and currently being reviewed by our team captains.</p>
-                `;
-            } else if (status === 'accepted') {
-                resContent.innerHTML = `
-                    <i class="fas fa-check-circle" style="font-size: 3.5rem; color: #00ff66;"></i>
-                    <h2 class="result-status status-accepted-ui">Application Accepted</h2>
-                    <p style="color: #ccc;">Congratulations! Welcome to 204 TEAM. Check your Discord for further instructions.</p>
-                `;
-            } else if (status === 'rejected') {
-                resContent.innerHTML = `
-                    <i class="fas fa-times-circle" style="font-size: 3.5rem; color: #ff003c;"></i>
-                    <h2 class="result-status status-rejected-ui">Application Declined</h2>
-                    <p style="color: #888;">Unfortunately, your request does not match our current requirements.</p>
-                `;
-            }
-        }
-
-        // --- PRELOADER & AUTH LINK CHECKS ---
-        window.onload = function() {
             setTimeout(() => {
-                const preloader = document.getElementById('preloader');
-                if(preloader) {
-                    preloader.style.opacity = '0'; 
-                    preloader.style.visibility = 'hidden';
-                }
-            }, 800);
+                introScreen.classList.add('intro-fade-out');
+                mainContent.classList.add('site-fade-in-active');
+                
+                setTimeout(() => {
+                    document.body.style.overflow = 'auto';
+                    introScreen.style.display = 'none';
 
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('code') || localStorage.getItem('204_authorized') === 'true') {
-                localStorage.setItem('204_authorized', 'true');
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainHub').style.display = 'flex';
-                document.getElementById('hubNavbar').style.display = 'flex';
-                window.history.replaceState({}, document.title, window.location.pathname);
+                    if (localStorage.getItem(CURRENT_UPDATE_ID) !== "seen") {
+                        document.getElementById('newUpdateToast').classList.add('show');
+                        document.getElementById('updateBadge').style.display = 'block';
+                    }
+                }, 900);
+            }, 2300); 
+        });
+
+        function dismissToast() {
+            document.getElementById('newUpdateToast').classList.remove('show');
+            localStorage.setItem(CURRENT_UPDATE_ID, "seen");
+        }
+
+        // LOCALIZATION DATABASE
+        const localization = {
+            en: {
+                introText: "204 TEAM",
+                mainTitle: "204 TEAM HUB",
+                mainSubtitle: "Access premium system utilities and registration node.",
+                tabFiles: "Files Storage",
+                tabApply: "Join Station",
+                tabUpdates: "Updates",
+                toastText: "New platform updates are available!",
+                descSpot: "Optimized package built by Trippy development group.",
+                descMac: "Advanced configuration values mapped for registry adjustments.",
+                lblGet: "Get File",
+                lblLocked: "Locked",
+                lblFormName: "Your Alias / Name",
+                lblFormDiscord: "Discord Handle",
+                lblFormAge: "Age (Minimum threshold: 19)",
+                lblFormSkills: "Core Skills",
+                lblFormExp: "Background & Ambition Sheet",
+                lblFormSubmit: "Send Application",
+                stOp: "Operational",
+                stPatch: "Needs Update",
+                upL1: "Platform transition complete: Switched layout theme to Premium Dark Gothic and blood red colors.",
+                upL2: "Fixed status logic indicators inversion for global repositories.",
+                upL3: "Removed external Discord authorization layers for direct hub deployment access.",
+                modTitle: "Submission Received",
+                modDesc: "Your recruitment request data has been synced.",
+                modBtn: "Close"
+            },
+            ar: {
+                introText: "فـريـق 204",
+                mainTitle: "منصة فريق 204",
+                mainSubtitle: "وصول مباشر لملفات النظام وبوابة التسجيل الخاصة بالفريق.",
+                tabFiles: "مخزن الملفات",
+                tabApply: "طلب انضمام",
+                tabUpdates: "التحديثات",
+                toastText: "توجد تحديثات جديدة متوفرة في المنصة!",
+                descSpot: "نسخة محسنة بالكامل تم تطويرها بواسطة تريبي.",
+                descMac: "تعديلات متقدمة مخصصة لتقليل زمن الاستجابة (Latency).",
+                lblGet: "تحميل الملف",
+                lblLocked: "مغلق حالياً",
+                lblFormName: "الإسم / اللقب",
+                lblFormDiscord: "حساب الديسكورد",
+                lblFormAge: "العمر (الحد الأدنى: 19 سنة)",
+                lblFormSkills: "المهارات الأساسية",
+                lblFormExp: "الخبرات السابقة والأهداف",
+                lblFormSubmit: "إرسال البيانات",
+                stOp: "شغال ومتاح",
+                stPatch: "تحت الصيانة",
+                upL1: "اكتمل الانتقال: تم تغيير واجهة الموقع بالكامل للستايل المظلم الفخم والأحمر الدموي.",
+                upL2: "إصلاح نظام قراءة الحالات (Status) المقلوبة في السيرفر بشكل نهائي.",
+                upL3: "حذف نظام ربط وتحقق الديسكورد الخارجي لتسهيل الدخول المباشر للمنصة.",
+                modTitle: "تم استلام طلبك",
+                modDesc: "لقد تم إرسال بيانات الانضمام الخاصة بك بنجاح.",
+                modBtn: "إغلاق"
             }
-            loadApplicationResult();
         };
 
-        function closeSuccessPopup() {
-            document.getElementById('successOverlay').style.display = 'none';
-            switchPage('result');
+        function toggleLanguage(lang) {
+            document.getElementById('langEn').classList.remove('active');
+            document.getElementById('langAr').classList.remove('active');
+            
+            if(lang === 'en') {
+                document.getElementById('langEn').classList.add('active');
+                document.body.style.direction = 'ltr';
+            } else {
+                document.getElementById('langAr').classList.add('active');
+                document.body.style.direction = 'rtl';
+            }
+
+            const trans = localization[lang];
+            document.getElementById('introSystemText').innerText = trans.introText;
+            document.getElementById('mainTitle').innerText = trans.mainTitle;
+            document.getElementById('mainSubtitle').innerText = trans.mainSubtitle;
+            document.getElementById('textTabFiles').innerText = trans.tabFiles;
+            document.getElementById('textTabApply').innerText = trans.tabApply;
+            document.getElementById('textTabUpdates').innerText = trans.tabUpdates;
+            document.getElementById('toastMessageText').innerText = trans.toastText;
+            document.getElementById('descSpot').innerText = trans.descSpot;
+            document.getElementById('descMac').innerText = trans.descMac;
+            
+            document.getElementById('lblFormName').innerText = trans.lblFormName;
+            document.getElementById('lblFormDiscord').innerText = trans.lblFormDiscord;
+            document.getElementById('lblFormAge').innerText = trans.lblFormAge;
+            document.getElementById('lblFormSkills').innerText = trans.lblFormSkills;
+            document.getElementById('lblFormExp').innerText = trans.lblFormExp;
+            document.getElementById('lblFormSubmit').innerText = trans.lblFormSubmit;
+
+            document.getElementById('upLine1').innerText = trans.upL1;
+            document.getElementById('upLine2').innerText = trans.upL2;
+            document.getElementById('upLine3').innerText = trans.upL3;
+
+            document.getElementById('modalTitle').innerText = trans.modTitle;
+            document.getElementById('modalDesc').innerText = trans.modDesc;
+            document.getElementById('modalBtn').innerText = trans.modBtn;
+
+            document.querySelectorAll('.lblGet').forEach((el, index) => {
+                if(index === 0) el.innerText = trans.lblGet;
+                else el.innerText = trans.lblLocked;
+            });
+
+            document.querySelectorAll('.status-text-label').forEach(el => {
+                const type = el.getAttribute('data-status');
+                if(type === 'operational') el.innerText = trans.stOp;
+                if(type === 'patched') el.innerText = trans.stPatch;
+            });
         }
 
-        // --- FORM SUBMIT & DATA VALIDATIONS ---
-        document.getElementById('teamAppForm').addEventListener('submit', function(e) {
+        function switchTab(tabName) {
+            document.getElementById('pageDownloads').classList.remove('active-page');
+            document.getElementById('pageApply').classList.remove('active-page');
+            document.getElementById('pageUpdates').classList.remove('active-page');
+            
+            document.getElementById('tabDownloads').classList.remove('active');
+            document.getElementById('tabApply').classList.remove('active');
+            document.getElementById('tabUpdates').classList.remove('active');
+
+            if(tabName === 'downloads') {
+                document.getElementById('pageDownloads').classList.add('active-page');
+                document.getElementById('tabDownloads').classList.add('active');
+            } else if(tabName === 'apply') {
+                document.getElementById('pageApply').classList.add('active-page');
+                document.getElementById('tabApply').classList.add('active');
+            } else if(tabName === 'updates') {
+                document.getElementById('pageUpdates').classList.add('active-page');
+                document.getElementById('tabUpdates').classList.add('active');
+                dismissToast();
+                document.getElementById('updateBadge').style.display = 'none';
+            }
+        }
+
+        function closePopup() { document.getElementById('successOverlay').style.display = 'none'; }
+
+        // FORM WEBHOOK ROUTING
+        document.getElementById('mainRegistryForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            let hasErrors = false;
-            const inputDiscord = document.getElementById('appDiscord');
-            const inputAge = document.getElementById('appAge');
-            const errDiscord = document.getElementById('errorDiscord');
-            const errAge = document.getElementById('errorAge');
-
-            inputDiscord.classList.remove('input-error'); errDiscord.style.display = 'none';
-            inputAge.classList.remove('input-error'); errAge.style.display = 'none';
-
-            const ageVal = parseInt(inputAge.value);
-            if (isNaN(ageVal) || ageVal < 19) {
-                inputAge.classList.add('input-error');
-                errAge.style.display = 'block';
-                hasErrors = true;
-            }
-
-            const discordVal = inputDiscord.value.trim();
-            const discordRegex = /^[a-zA-Z0-9._]{2,32}$/; 
-            if (!discordRegex.test(discordVal) || discordVal.includes('@')) {
-                inputDiscord.classList.add('input-error');
-                errDiscord.style.display = 'block';
-                hasErrors = true;
-            }
-
-            if (hasErrors) return; 
-
-            // حط رابط الـ Webhook متاعك لهنا باش يبعث للديسكورد مباشرة
-            const DISCORD_WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
-
-            if (DISCORD_WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
-                localStorage.setItem('204_app_status', 'pending');
-                document.getElementById('successOverlay').style.display = 'flex';
+            const age = parseInt(document.getElementById('formAge').value);
+            if(age < 19) {
+                alert(document.body.style.direction === 'rtl' ? 'يجب أن يكون عمرك 19 سنة أو أكثر.' : 'Minimum age required is 19.');
                 return;
             }
 
-            const name = document.getElementById('appName').value;
-            const skills = document.getElementById('appRole').value;
-            const experience = document.getElementById('appExperience').value;
-
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spin fa-circle-notch"></i> Sending...';
+            const WEBHOOK_URL = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
+            if (WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
+                document.getElementById('successOverlay').style.display = 'flex';
+                document.getElementById('mainRegistryForm').reset();
+                return;
+            }
 
             const payload = {
-                username: "204 Application System",
-                avatar_url: "https://trippy-204.github.io/204-Team/logo.png",
                 embeds: [{
-                    title: "📥 New Application Received",
-                    color: 16711740, 
+                    title: "📥 Premium Hub Form Entry",
+                    color: 8388640,
                     fields: [
-                        { name: "👤 Name", value: name, inline: true },
-                        { name: "🎮 Discord", value: `\`${discordVal}\``, inline: true },
-                        { name: "⏳ Age", value: String(ageVal), inline: true },
-                        { name: "⚡ Skills", value: skills, inline: false },
-                        { name: "📝 Background", value: experience, inline: false }
+                        { name: "Name", value: document.getElementById('formName').value, inline: true },
+                        { name: "Discord", value: `\`${document.getElementById('formDiscord').value}\``, inline: true },
+                        { name: "Age", value: String(age), inline: true },
+                        { name: "Skills", value: document.getElementById('formSkills').value, inline: false },
+                        { name: "About", value: document.getElementById('formExp').value, inline: false }
                     ],
-                    footer: { text: "204 Portal Dashboard" },
                     timestamp: new Date()
                 }]
             };
 
-            fetch(DISCORD_WEBHOOK_URL, {
+            fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            })
-            .then(response => {
-                if (response.ok) {
-                    localStorage.setItem('204_app_status', 'pending'); 
-                    document.getElementById('successOverlay').style.display = 'flex';
-                    document.getElementById('teamAppForm').reset();
-                } else {
-                    alert('Webhook delivery failed.');
-                }
-            })
-            .catch(error => {
-                console.error(error); alert('Connection error.');
-            })
-            .finally(() => {
-                submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+            }).then(() => {
+                document.getElementById('successOverlay').style.display = 'flex';
+                document.getElementById('mainRegistryForm').reset();
             });
         });
     </script>
