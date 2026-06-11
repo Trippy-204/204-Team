@@ -14,7 +14,7 @@ if (!$input) {
 }
 
 // الـ Webhook مخفي هنا تماماً في السيرفر ومستحيل يتشاف بالـ Ctrl + S أو F12
-$webhook_url = 'https://discord.com/api/webhooks/1512207429541171271/-EHKZ05YkC5j9U2M3GceOvnh5nC3bIPzrPDUhq2iQ0vs54uoU4F2DQqa9hx6jQQRIuef';
+$webhook_url = 'https://discord.com/api/webhooks/1514748698918260919/MQ00J75z635Xo6UFn3YOARzHyYjf2f4TTQ5UjAv9wLIRiV2G9aONEprhQs75jaJjav5D';
 
 // إرسال البيانات إلى ديسكورد عبر cURL
 $ch = curl_init($webhook_url);
