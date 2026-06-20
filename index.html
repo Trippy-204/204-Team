@@ -13,7 +13,6 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             transition: background 0.3s, color 0.3s, border-color 0.3s;
-            /* منع تحديد النصوص في الصفحة لزيادة الحماية */
             user-select: none;
             -webkit-user-select: none;
         }
@@ -40,9 +39,7 @@
             position: relative;
         }
 
-        /* ==========================================
-           🎬 DARK PREMIUM INTRO
-           ========================================== */
+        /* --- DARK PREMIUM INTRO --- */
         #cinematicIntro {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -89,9 +86,7 @@
             100% { filter: drop-shadow(0 0 35px rgba(128, 0, 32, 0.8)) scale(1.02); }
         }
 
-        /* ==========================================
-           🔔 ALERT TOAST
-           ========================================== */
+        /* --- ALERT TOAST --- */
         .update-toast {
             position: fixed;
             top: -100px;
@@ -115,9 +110,7 @@
         .update-toast .close-toast { cursor: pointer; color: #718096; margin-left: 10px; }
         .update-toast .close-toast:hover { color: #ffffff; }
 
-        /* ==========================================
-           💻 MAIN CONTENT
-           ========================================== */
+        /* --- MAIN CONTENT --- */
         #mainSiteContent {
             opacity: 0;
             transform: translateY(15px);
@@ -130,7 +123,6 @@
         .site-fade-in-active { animation: premiumFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes premiumFadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        /* --- TOP UTILITIES --- */
         .top-bar {
             width: 100%;
             max-width: 1100px;
@@ -171,13 +163,11 @@
             box-shadow: 0 0 12px rgba(128, 0, 32, 0.3);
         }
 
-        /* --- BRANDING --- */
         .hub-branding { text-align: center; margin: 20px 0 40px; }
         .site-logo { width: 95px; height: 95px; object-fit: contain; margin-bottom: 15px; }
         .brand-title { font-size: 2.5rem; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; color: #ffffff; }
         .brand-subtitle { color: #718096; font-size: 0.95rem; }
 
-        /* --- NAVIGATION --- */
         .hub-navbar {
             display: flex; justify-content: center; gap: 15px; margin-bottom: 45px;
             background: rgba(255, 255, 255, 0.01); padding: 6px; border-radius: 6px;
@@ -199,7 +189,6 @@
             background: #ff3355; border-radius: 50%; display: none;
         }
 
-        /* --- PAGES LAYOUT --- */
         .main-container { width: 100%; max-width: 1100px; padding: 0 20px 60px; }
         
         .hub-page { 
@@ -216,7 +205,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- CARDS LAYOUT (DOWNLOADS) --- */
         .grid-layout { display: flex; flex-direction: column; gap: 20px; }
         
         .download-card {
@@ -238,7 +226,6 @@
         .card-desc { color: #718096; font-size: 0.9rem; }
         .card-action-zone { display: flex; align-items: center; gap: 25px; }
 
-        /* --- BADGES & STATUSES --- */
         .status-badge { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; padding: 6px 14px; border-radius: 4px; }
         .status-operational { background: rgba(0, 200, 80, 0.06); color: #00c850; border: 1px solid rgba(0, 200, 80, 0.15); }
         .status-operational .dot { width: 6px; height: 6px; background: #00c850; border-radius: 50%; }
@@ -253,9 +240,7 @@
         }
         .btn-action:hover { background: #800020; box-shadow: 0 0 15px rgba(128, 0, 32, 0.4); }
 
-        /* ==========================================
-           🔥 PANEL LAYOUT
-           ========================================== */
+        /* --- PANEL LAYOUT --- */
         .form-panel {
             background: #0b0b0f;
             border: 2px solid #800020;
@@ -306,7 +291,6 @@
             background: #0d0003;
         }
 
-        /* --- STRINGS UPDATES CATEGORY --- */
         .updates-wrapper { display: flex; flex-direction: column; gap: 15px; }
         .update-string-item {
             background: #0b0b0f;
@@ -321,7 +305,6 @@
         }
         .update-text-content { color: #cbd5e0; font-size: 0.95rem; line-height: 1.5; }
 
-        /* --- OVERLAY MODALS --- */
         .overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); z-index: 999; justify-content: center; align-items: center; backdrop-filter: blur(4px);
@@ -496,22 +479,13 @@
         const CURRENT_UPDATE_ID = "update_gothic_v3_2026";
         let activeLang = 'en';
 
-        // --- 🛡️ سكريبت الحماية: منع كليك يمين، سيف، وعرض السورس ---
-        document.addEventListener('contextmenu', event => event.preventDefault()); // منع كليك يمين
+        // --- الحماية: منع كليك يمين، سيف، وعرض السورس ---
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
         
         document.addEventListener('keydown', event => {
-            // منع Ctrl + S (حفظ الصفحة)
-            if (event.ctrlKey && (event.key === 's' || event.key === 'S')) {
-                event.preventDefault();
-            }
-            // منع Ctrl + U (عرض كود الصفحة)
-            if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) {
-                event.preventDefault();
-            }
-            // منع F12 (أدوات المطور)
-            if (event.key === 'F12') {
-                event.preventDefault();
-            }
+            if (event.ctrlKey && (event.key === 's' || event.key === 'S')) event.preventDefault();
+            if (event.ctrlKey && (event.key === 'u' || event.key === 'U')) event.preventDefault();
+            if (event.key === 'F12') event.preventDefault();
         });
 
         // --- TIMING ENGINE FOR INTRO & SMART TOAST ---
@@ -543,58 +517,26 @@
         // LOCALIZATION DATABASE
         const localization = {
             en: {
-                introText: "204 TEAM",
-                mainTitle: "204 TEAM HUB",
-                mainSubtitle: "Access premium system utilities and registration node.",
-                tabFiles: "Files Storage",
-                tabApply: "Join Station",
-                tabUpdates: "Updates",
-                toastText: "New platform updates are available!",
-                descSpot: "Optimized package built by Trippy development group.",
-                descMac: "Advanced configuration values mapped for registry adjustments.",
-                lblGet: "Get File",
-                lblLocked: "Locked",
-                lblFormName: "Your Alias / Name",
-                lblFormDiscord: "Discord Handle",
-                lblFormAge: "Age (Minimum threshold: 19)",
-                lblFormSkills: "Core Skills",
-                lblFormExp: "Background & Ambition Sheet",
-                lblFormSubmit: "Send Application",
-                stOp: "Operational",
-                stPatch: "Needs Update",
+                introText: "204 TEAM", mainTitle: "204 TEAM HUB", mainSubtitle: "Access premium system utilities and registration node.",
+                tabFiles: "Files Storage", tabApply: "Join Station", tabUpdates: "Updates", toastText: "New platform updates are available!",
+                descSpot: "Optimized package built by Trippy development group.", descMac: "Advanced configuration values mapped for registry adjustments.",
+                lblGet: "Get File", lblLocked: "Locked", lblFormName: "Your Alias / Name", lblFormDiscord: "Discord Handle",
+                lblFormAge: "Age (Minimum threshold: 19)", lblFormSkills: "Core Skills", lblFormExp: "Background & Ambition Sheet",
+                lblFormSubmit: "Send Application", stOp: "Operational", stPatch: "Needs Update",
                 upL1: "Platform transition complete: Switched layout theme to Premium Dark Gothic and blood red colors.",
-                upL2: "Fixed status logic indicators inversion for global repositories.",
-                upL3: "Removed external Discord authorization layers for direct hub deployment access.",
-                modTitle: "Submission Received",
-                modDesc: "Your recruitment request data has been synced.",
-                modBtn: "Close"
+                upL2: "Fixed status logic indicators inversion for global repositories.", upL3: "Removed external Discord authorization layers for direct hub deployment access.",
+                modTitle: "Submission Received", modDesc: "Your recruitment request data has been synced.", modBtn: "Close"
             },
             ar: {
-                introText: "فـريـق 204",
-                mainTitle: "منصة فريق 204",
-                mainSubtitle: "وصول مباشر لملفات النظام وبوابة التسجيل الخاصة بالفريق.",
-                tabFiles: "مخزن الملفات",
-                tabApply: "طلب انضمام",
-                tabUpdates: "التحديثات",
-                toastText: "توجد تحديثات جديدة متوفرة في المنصة!",
-                descSpot: "نسخة محسنة بالكامل تم تطويرها بواسطة تريبي.",
-                descMac: "تعديلات متقدمة مخصصة لتقليل زمن الاستجابة (Latency).",
-                lblGet: "تحميل الملف",
-                lblLocked: "مغلق حالياً",
-                lblFormName: "الإسم / اللقب",
-                lblFormDiscord: "حساب الديسكورد",
-                lblFormAge: "العمر (الحد الأدنى: 19 سنة)",
-                lblFormSkills: "المهارات الأساسية",
-                lblFormExp: "الخبرات السابقة والأهداف",
-                lblFormSubmit: "إرسال البيانات",
-                stOp: "شغال ومتاح",
-                stPatch: "تحت الصيانة",
+                introText: "فـريـق 204", mainTitle: "منصة فريق 204", mainSubtitle: "وصول مباشر لملفات النظام وبوابة التسجيل الخاصة بالفريق.",
+                tabFiles: "مخزن الملفات", tabApply: "طلب انضمام", tabUpdates: "التحديثات", toastText: "توجد تحديثات جديدة متوفرة في المنصة!",
+                descSpot: "نسخة محسنة بالكامل تم تطويرها بواسطة تريبي.", descMac: "تعديلات متقدمة مخصصة لتقليل زمن الاستجابة (Latency).",
+                lblGet: "تحميل الملف", lblLocked: "مغلق حالياً", lblFormName: "الإسم / اللقب", lblFormDiscord: "حساب الديسكورد",
+                lblFormAge: "العمر (الحد الأدنى: 19 سنة)", lblFormSkills: "المهارات الأساسية", lblFormExp: "الخبرات السابقة والأهداف",
+                lblFormSubmit: "إرسال البيانات", stOp: "شغال ومتاح", stPatch: "تحت الصيانة",
                 upL1: "اكتمل الانتقال: تم تغيير واجهة الموقع بالكامل للستايل المظلم الفخم والأحمر الدموي.",
-                upL2: "إصلاح نظام قراءة الحالات (Status) المقلوبة في السيرفر بشكل نهائي.",
-                upL3: "حذف نظام ربط وتحقق الديسكورد الخارجي لتسهيل الدخول المباشر للمنصة.",
-                modTitle: "تم استلام طلبك",
-                modDesc: "لقد تم إرسال بيانات الانضمام الخاصة بك بنجاح.",
-                modBtn: "إغلاق"
+                upL2: "إصلاح نظام قراءة الحالات (Status) المقلوبة في السيرفر بشكل نهائي.", upL3: "حذف نظام ربط وتحقق الديسكورد الخارجي لتسهيل الدخول المباشر للمنصة.",
+                modTitle: "تم استلام طلبك", modDesc: "لقد تم إرسال بيانات الانضمام الخاصة بك بنجاح.", modBtn: "إغلاق"
             }
         };
 
@@ -675,7 +617,7 @@
 
         function closePopup() { document.getElementById('successOverlay').style.display = 'none'; }
 
-        // FORM SUBMISSION ROUTING (VIA BACKEND PROXY)
+        // --- FORM SUBMISSION ROUTING ---
         document.getElementById('mainRegistryForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const age = parseInt(document.getElementById('formAge').value);
@@ -699,17 +641,21 @@
                 }]
             };
 
-            // يتم الآن الإرسال إلى السيرفر الوسيط بدلاً من كشف رابط الديسكورد
             fetch('send.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            }).then(() => {
-                document.getElementById('successOverlay').style.display = 'flex';
-                document.getElementById('mainRegistryForm').reset();
-            }).catch(err => {
-                console.error("Submission pipeline error:", err);
-                document.getElementById('successOverlay').style.display = 'flex';
+            })
+            .then(response => {
+                if(response.ok) {
+                    document.getElementById('successOverlay').style.display = 'flex';
+                    document.getElementById('mainRegistryForm').reset();
+                } else {
+                    alert(activeLang === 'ar' ? 'فشل الاتصال بالسيرفر الوسيط.' : 'Fixing Node Connection error.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
             });
         });
     </script>
